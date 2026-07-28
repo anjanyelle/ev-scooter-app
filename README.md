@@ -1,3 +1,99 @@
+# EV Scooter App
+
+A premium EV Scooter mobile dashboard application built with React Native and TypeScript.
+
+## Features
+
+- Premium futuristic dark theme with neon lime green accents
+- Real-time vehicle status monitoring
+- Battery health and range tracking
+- Weekly ride statistics with interactive charts
+- Nearby charger locator with map integration
+- Service booking functionality
+- Smooth animations and glassmorphism effects
+- Responsive design for all Android devices
+
+## Tech Stack
+
+- **React Native** 0.86.2
+- **TypeScript** for type safety
+- **React Navigation** for navigation
+- **React Native Reanimated** for animations
+- **React Native Chart Kit** for data visualization
+- **React Native Linear Gradient** for premium gradients
+- **React Native Vector Icons** for icons
+
+## Project Structure
+
+```
+src/
+├── components/       # Reusable UI components
+├── screens/          # Screen components
+├── navigation/       # Navigation configuration
+├── theme/           # Theme constants (colors, spacing, typography)
+├── hooks/           # Custom React hooks
+└── services/        # API and data services
+```
+
+## Installation
+
+### Step 1: Install Dependencies
+
+```bash
+npm install
+```
+
+### Step 2: Install iOS Pods (iOS only)
+
+```bash
+cd ios
+pod install
+cd ..
+```
+
+### Step 3: Start Metro
+
+```bash
+npm start
+```
+
+### Step 4: Run the App
+
+**Android:**
+```bash
+npm run android
+```
+
+**iOS:**
+```bash
+npm run ios
+```
+
+## Components
+
+- **Header** - App header with menu, logo, notifications, and profile
+- **GreetingCard** - Personalized greeting with motivational text
+- **WeatherCard** - Current weather display
+- **VehicleCard** - Main vehicle info with battery and range
+- **BatteryProgress** - Animated battery percentage indicator
+- **QuickActions** - Vehicle control buttons (unlock, flash, horn, etc.)
+- **StatisticsCard** - Individual statistic display
+- **MapCard** - Nearby charger locator
+- **RideChart** - Weekly ride statistics chart
+- **ServiceCard** - Service booking card
+- **BottomNavigation** - Tab navigation with floating center button
+
+## Theme
+
+The app uses a premium dark theme:
+- **Background**: #070707 (Dark Black)
+- **Primary Accent**: #C8FF00 (Neon Lime Green)
+- **Card Radius**: 20px
+- **Glassmorphism**: Soft blur effects
+- **Shadows**: Green glowing shadows
+
+## Development
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
