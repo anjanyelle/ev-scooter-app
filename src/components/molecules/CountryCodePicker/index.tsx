@@ -38,7 +38,7 @@ export const CountryCodePicker: React.FC<CountryCodePickerProps> = ({
   return (
     <View style={styles.overlay}>
       <TouchableOpacity style={styles.backdrop} onPress={onClose} activeOpacity={1}>
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.colors.background.surface }]}>
           <View style={styles.header}>
             <AppText variant="h4" color="primary" style={styles.title}>
               Select Country
@@ -114,6 +114,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   selectedItem: {
-    backgroundColor: 'rgba(0, 229, 255, 0.1)',
+    backgroundColor: 'rgba(184, 220, 0, 0.1)',
   },
 });

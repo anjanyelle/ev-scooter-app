@@ -14,11 +14,11 @@ export const radius = {
   full: 9999,
 
   // Component-specific radius
-  input: 12,
-  button: 12,
-  card: 16,
-  bottomSheet: 24,
-  chip: 20,
+  input: 14,
+  button: 16,
+  card: 24,
+  bottomSheet: 28,
+  chip: 30,
   avatar: 9999,
   badge: 4,
   dialog: 16,

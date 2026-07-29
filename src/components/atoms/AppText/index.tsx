@@ -29,7 +29,9 @@ export const AppText: React.FC<AppTextProps> = ({
     if (color === 'warning') return theme.colors.accent.warning;
     if (color === 'error') return theme.colors.accent.error;
     if (color === 'info') return theme.colors.accent.info;
-    return theme.colors.text[color as 'primary' | 'secondary' | 'tertiary' | 'inverse'];
+    if (color === 'tertiary') return theme.colors.text.muted;
+    if (color === 'inverse') return theme.colors.background.primary;
+    return theme.colors.text[color as 'primary' | 'secondary'];
   };
 
   const textStyle = [

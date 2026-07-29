@@ -6,62 +6,68 @@
 export const colors = {
   // Primary Brand Colors
   primary: {
-    DEFAULT: '#00E5FF',
-    dark: '#00B8D4',
-    light: '#18FFFF',
-    glow: 'rgba(0, 229, 255, 0.3)',
+    DEFAULT: '#B8DC00',
+    hover: '#A4C800',
+    light: '#D6F94D',
+    dark: '#8DA700',
+    glow: 'rgba(184, 220, 0, 0.35)',
   },
 
   // Background Colors
   background: {
-    primary: '#0A0E27',
-    secondary: '#111640',
-    tertiary: '#1A1F4E',
-    gradient: ['#0A0E27', '#111640', '#1A1F4E'],
+    primary: '#050505',
+    surface: '#0D0D0D',
+    card: '#171717',
+    cardHover: '#202020',
+    secondaryCard: '#111111',
+    gradient: ['#050505', '#0C0F07', '#050505'],
   },
 
-  // Surface Colors
-  surface: {
-    DEFAULT: '#1E2349',
-    elevated: '#252A5C',
-    overlay: 'rgba(30, 35, 73, 0.8)',
+  // Glass Effect
+  glass: {
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: 'rgba(255, 255, 255, 0.08)',
+    shadow: 'rgba(0, 0, 0, 0.45)',
   },
 
   // Text Colors
   text: {
     primary: '#FFFFFF',
-    secondary: '#B0B8D0',
-    tertiary: '#6B7394',
-    inverse: '#0A0E27',
+    body: '#D8D8D8',
+    secondary: '#A5A5A5',
+    muted: '#707070',
+    disabled: '#555555',
   },
 
   // Accent Colors
   accent: {
-    success: '#00E676',
-    warning: '#FFB300',
-    error: '#FF5252',
-    info: '#00E5FF',
+    neonGreen: '#B8DC00',
+    success: '#72E000',
+    warning: '#FFC857',
+    error: '#FF5A5F',
+    info: '#38BDF8',
   },
 
   // Border Colors
   border: {
-    DEFAULT: 'rgba(255, 255, 255, 0.1)',
-    light: 'rgba(255, 255, 255, 0.05)',
-    focus: '#00E5FF',
+    DEFAULT: '#262626',
+    divider: '#1E1E1E',
+    active: '#B8DC00',
   },
-
-  // Overlay Colors
-  overlay: {
-    dark: 'rgba(10, 14, 39, 0.8)',
-    light: 'rgba(255, 255, 255, 0.1)',
+  
+  // Icon Colors
+  icon: {
+    primary: '#B8DC00',
+    secondary: '#FFFFFF',
+    muted: '#8A8A8A',
   },
 
   // Status Colors
   status: {
-    online: '#00E676',
-    offline: '#FF5252',
-    charging: '#FFB300',
-    available: '#00E5FF',
+    online: '#72E000',
+    charging: '#B8DC00',
+    offline: '#808080',
+    critical: '#FF4D4F',
   },
 } as const;
 

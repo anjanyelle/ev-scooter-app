@@ -47,7 +47,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
     if (variant === 'secondary') {
       return {
         ...baseStyle,
-        backgroundColor: theme.colors.surface.elevated,
+        backgroundColor: theme.colors.background.card,
       };
     }
 
@@ -67,7 +67,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
     if (variant === 'outline') {
       return theme.colors.primary.DEFAULT;
     }
-    return theme.colors.text.inverse;
+    return theme.colors.background.primary;
   };
 
   const getSizeStyle = (): ViewStyle => {

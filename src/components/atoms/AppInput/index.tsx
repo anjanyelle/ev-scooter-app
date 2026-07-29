@@ -7,6 +7,7 @@ import React from 'react';
 import { TextInput, TextInputProps, View, StyleSheet } from 'react-native';
 import { useTheme } from '../../../theme';
 import { AppText } from '../AppText';
+import { AppIcon } from '../AppIcon';
 
 export interface AppInputProps extends TextInputProps {
   label?: string;
@@ -41,8 +42,8 @@ export const AppInput: React.FC<AppInputProps> = ({
           styles.inputContainer,
           {
             borderRadius: theme.radius.input,
-            borderColor: error ? theme.colors.accent.error : theme.colors.border.DEFAULT,
-            backgroundColor: theme.colors.surface.DEFAULT,
+            borderColor: error ? theme.colors.accent.error : theme.colors.glass.border,
+            backgroundColor: theme.colors.glass.background,
           },
         ]}
       >
@@ -63,7 +64,10 @@ export const AppInput: React.FC<AppInputProps> = ({
             },
             style,
           ]}
-          placeholderTextColor={theme.colors.text.tertiary}
+          placeholderTextColor={theme.colors.text.muted}
+          accessibilityLabel={label || 'Input field'}
+          accessibilityRole="text"
+          testID={props.testID || 'app-input'}
           {...props}
         />
         {rightIcon && (

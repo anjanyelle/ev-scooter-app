@@ -6,23 +6,26 @@
 export const typography = {
   // Font families
   fonts: {
-    regular: 'System',
-    medium: 'System',
-    semiBold: 'System',
-    bold: 'System',
+    primary: 'Sora',
+    secondary: 'Outfit',
+    tertiary: 'Plus Jakarta Sans',
+    regular: 'Sora-Regular',
+    medium: 'Sora-Medium',
+    semiBold: 'Sora-SemiBold',
+    bold: 'Sora-Bold',
   },
 
   // Font sizes
   fontSize: {
-    xs: 11,
-    sm: 13,
-    md: 15,
-    lg: 17,
-    xl: 20,
-    xxl: 24,
-    xxxl: 32,
-    huge: 40,
-    massive: 48,
+    small: 12,
+    caption: 13,
+    body: 15,
+    bodyLarge: 16,
+    h4: 18,
+    h3: 20,
+    h2: 24,
+    h1: 30,
+    display: 34,
   },
 
   // Font weights
@@ -44,53 +47,60 @@ export const typography = {
   letterSpacing: {
     tight: -0.5,
     normal: 0,
-    wide: 0.5,
-    wider: 1,
+    wide: 0.2,
+    wider: 0.5,
   },
 
   // Text styles
   styles: {
     // Headings
     h1: {
-      fontSize: 40,
+      fontFamily: 'Sora-Bold',
+      fontSize: 30,
       fontWeight: '700' as const,
-      lineHeight: 48,
-      letterSpacing: -0.5,
+      lineHeight: 38,
+      letterSpacing: -0.3,
     },
     h2: {
-      fontSize: 32,
+      fontFamily: 'Sora-Bold',
+      fontSize: 24,
       fontWeight: '700' as const,
-      lineHeight: 40,
-      letterSpacing: -0.5,
+      lineHeight: 32,
+      letterSpacing: -0.24,
     },
     h3: {
-      fontSize: 24,
-      fontWeight: '600' as const,
-      lineHeight: 32,
-      letterSpacing: 0,
+      fontFamily: 'Sora-Bold',
+      fontSize: 20,
+      fontWeight: '700' as const,
+      lineHeight: 28,
+      letterSpacing: -0.2,
     },
     h4: {
-      fontSize: 20,
-      fontWeight: '600' as const,
-      lineHeight: 28,
-      letterSpacing: 0,
+      fontFamily: 'Sora-Bold',
+      fontSize: 18,
+      fontWeight: '700' as const,
+      lineHeight: 26,
+      letterSpacing: -0.18,
     },
 
     // Body text
     bodyLarge: {
-      fontSize: 17,
+      fontFamily: 'Sora-Regular',
+      fontSize: 16,
       fontWeight: '400' as const,
       lineHeight: 24,
       letterSpacing: 0,
     },
     bodyMedium: {
+      fontFamily: 'Sora-Regular',
       fontSize: 15,
       fontWeight: '400' as const,
       lineHeight: 22,
       letterSpacing: 0,
     },
     bodySmall: {
-      fontSize: 13,
+      fontFamily: 'Sora-Regular',
+      fontSize: 12,
       fontWeight: '400' as const,
       lineHeight: 18,
       letterSpacing: 0,
@@ -98,44 +108,50 @@ export const typography = {
 
     // Labels
     labelLarge: {
+      fontFamily: 'Sora-Medium',
       fontSize: 15,
       fontWeight: '500' as const,
       lineHeight: 20,
-      letterSpacing: 0.5,
+      letterSpacing: 0,
     },
     labelMedium: {
+      fontFamily: 'Sora-Medium',
       fontSize: 13,
       fontWeight: '500' as const,
       lineHeight: 18,
-      letterSpacing: 0.5,
+      letterSpacing: 0,
     },
     labelSmall: {
+      fontFamily: 'Sora-Medium',
       fontSize: 11,
       fontWeight: '500' as const,
       lineHeight: 16,
-      letterSpacing: 0.5,
+      letterSpacing: 0,
     },
 
     // Captions
     caption: {
-      fontSize: 11,
+      fontFamily: 'Sora-Regular',
+      fontSize: 13,
       fontWeight: '400' as const,
-      lineHeight: 16,
-      letterSpacing: 0.4,
+      lineHeight: 18,
+      letterSpacing: 0,
     },
 
     // Button text
     button: {
-      fontSize: 17,
+      fontFamily: 'Sora-SemiBold',
+      fontSize: 16,
       fontWeight: '600' as const,
       lineHeight: 24,
-      letterSpacing: 0.5,
+      letterSpacing: 0.2,
     },
     buttonSmall: {
+      fontFamily: 'Sora-SemiBold',
       fontSize: 13,
       fontWeight: '600' as const,
       lineHeight: 18,
-      letterSpacing: 0.5,
+      letterSpacing: 0.2,
     },
   },
 } as const;

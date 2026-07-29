@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const RootNavigator: React.FC = () => {
   // TODO: Add authentication state check
   // const isAuthenticated = useAuth();
-  
+
   // For now, always show auth flow
   const isAuthenticated = false;
 

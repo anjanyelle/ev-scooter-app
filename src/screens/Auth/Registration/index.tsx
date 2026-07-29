@@ -34,9 +34,8 @@ export const RegistrationScreen: React.FC<RegistrationScreenProps> = ({
     <AuthTemplate
       showHero={true}
       showHeader={true}
-      showWelcome={true}
       title="Create Account"
-      subtitle="Join us and start your journey"
+      subtitle="Sign up to start your journey with us"
       onBackPress={handleBackPress}
     >
       <View style={styles.formWrapper}>

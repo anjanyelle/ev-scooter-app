@@ -1,12 +1,11 @@
 /**
  * AuthHeader Component
- * Back button + BrandLogo for auth screens
+ * Glass-styled Back button for auth screens
  */
 
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { useTheme } from '../../../theme';
-import { BrandLogo } from '../../atoms/BrandLogo';
 import { AppIcon } from '../../atoms/AppIcon';
 
 export interface AuthHeaderProps {
@@ -27,13 +26,21 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
       {showBackButton && (
         <TouchableOpacity
           onPress={onBackPress}
-          style={styles.backButton}
+          style={[
+            styles.backButton,
+            {
+              backgroundColor: theme.colors.glass.background,
+              borderColor: theme.colors.glass.border,
+              borderRadius: 16,
+            }
+          ]}
           activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
         >
-          <AppIcon name="arrow-left" size={24} color="primary" />
+          <AppIcon name="chevron-left" size={24} color="secondary" />
         </TouchableOpacity>
       )}
-      <BrandLogo size="medium" />
     </View>
   );
 };
@@ -43,9 +50,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 16,
+    zIndex: 10, // Ensure it sits above hero elements
   },
   backButton: {
-    marginRight: 16,
-    padding: 4,
+    width: 48,
+    height: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
   },
 });

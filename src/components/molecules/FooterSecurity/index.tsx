@@ -10,21 +10,17 @@ import { AppText } from '../../atoms/AppText';
 import { AppIcon } from '../../atoms/AppIcon';
 
 export interface FooterSecurityProps {
-  message?: string;
   style?: ViewStyle;
 }
 
-export const FooterSecurity: React.FC<FooterSecurityProps> = ({
-  message = 'Your data is protected with end-to-end encryption',
-  style,
-}) => {
+export const FooterSecurity: React.FC<FooterSecurityProps> = ({ style }) => {
   const theme = useTheme();
 
   return (
     <View style={[styles.container, style]}>
-      <AppIcon name="lock-outline" size={16} color="tertiary" style={styles.icon} />
-      <AppText variant="caption" color="tertiary" style={styles.text}>
-        {message}
+      <AppIcon name="lock-outline" size={16} color="primary" style={styles.icon} />
+      <AppText variant="caption" style={[styles.text, { color: theme.colors.text.secondary }]}>
+        Your data is safe and secure with <AppText variant="caption" style={{ color: theme.colors.primary.DEFAULT }}>LEXICON Connect</AppText>
       </AppText>
     </View>
   );
@@ -43,6 +39,6 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontSize: 11,
+    fontSize: 12,
   },
 });

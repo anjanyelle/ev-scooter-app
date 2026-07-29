@@ -19,7 +19,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 }) => {
   const theme = useTheme();
 
-  const handleLogin = (phone: string, password: string) => {
+  const handleLogin = (phone: string, password?: string) => {
     console.log('Login attempt:', { phone, password });
     // TODO: Implement login logic
     // navigation.replace('Dashboard');
@@ -46,14 +46,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
     <AuthTemplate
       showHero={true}
       showHeader={true}
-      showWelcome={true}
       title="Welcome Back"
-      subtitle="Sign in to continue your journey"
+      subtitle="Login to continue your ride experience"
       onBackPress={handleBackPress}
     >
       <View style={styles.formWrapper}>
         <Spacer size="lg" />
         <LoginForm
+          mode="phone"
           onLogin={handleLogin}
           onCreateAccount={handleCreateAccount}
           onHelpPress={handleHelpPress}

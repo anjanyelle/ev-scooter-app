@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useTheme } from '../../../theme';
 import { AppText } from '../../atoms/AppText';
 import { AppInput } from '../../atoms/AppInput';
@@ -43,8 +43,8 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
           styles.inputContainer,
           {
             borderRadius: theme.radius.input,
-            borderColor: error ? theme.colors.accent.error : theme.colors.border.DEFAULT,
-            backgroundColor: theme.colors.surface.DEFAULT,
+            borderColor: error ? theme.colors.accent.error : theme.colors.glass.border,
+            backgroundColor: theme.colors.glass.background,
           },
         ]}
       >
@@ -57,19 +57,27 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
             {countryCode}
           </AppText>
           {onCountryCodePress && (
-            <AppIcon name="chevron-down" size={20} color="tertiary" />
+            <AppIcon name="chevron-down" size={20} color="secondary" />
           )}
         </TouchableOpacity>
         <View style={styles.divider} />
-        <AppInput
-          value={phoneNumber}
-          onChangeText={onPhoneNumberChange}
-          placeholder="Phone number"
-          keyboardType="phone-pad"
-          error={error}
-          style={styles.phoneInput}
-        />
+        <View style={styles.inputWrapper}>
+          <TextInput
+            style={[styles.phoneInput, { color: theme.colors.text.primary }]}
+            value={phoneNumber}
+            onChangeText={onPhoneNumberChange}
+            placeholder="Enter mobile number"
+            placeholderTextColor={theme.colors.text.muted}
+            keyboardType="phone-pad"
+          />
+          <AppIcon name="cellphone-outline" size={20} color="tertiary" style={styles.rightIcon} />
+        </View>
       </View>
+      {error && (
+        <AppText variant="caption" color="error" style={styles.error}>
+          {error}
+        </AppText>
+      )}
     </View>
   );
 };
@@ -99,9 +107,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     marginHorizontal: 8,
   },
+  inputWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 16,
+  },
   phoneInput: {
     flex: 1,
     paddingVertical: 14,
     paddingHorizontal: 12,
+    fontSize: 15,
+  },
+  rightIcon: {
+    marginLeft: 8,
+  },
+  error: {
+    marginTop: 6,
   },
 });

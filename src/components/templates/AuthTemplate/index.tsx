@@ -9,13 +9,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../theme';
 import { AuthHeader } from '../../organisms/AuthHeader';
 import { HeroVehicleSection } from '../../organisms/HeroVehicleSection';
-import { WelcomeSection } from '../../organisms/WelcomeSection';
 
 export interface AuthTemplateProps {
   children: React.ReactNode;
   showHero?: boolean;
   showHeader?: boolean;
-  showWelcome?: boolean;
   title?: string;
   subtitle?: string;
   onBackPress?: () => void;
@@ -26,7 +24,6 @@ export const AuthTemplate: React.FC<AuthTemplateProps> = ({
   children,
   showHero = true,
   showHeader = true,
-  showWelcome = true,
   title,
   subtitle,
   onBackPress,
@@ -38,7 +35,7 @@ export const AuthTemplate: React.FC<AuthTemplateProps> = ({
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
       <StatusBar barStyle="light-content" backgroundColor={theme.colors.background.primary} />
-      
+
       <KeyboardAvoidingView
         style={styles.keyboardAvoid}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -54,15 +51,16 @@ export const AuthTemplate: React.FC<AuthTemplateProps> = ({
         >
           {/* Header */}
           {showHeader && (
-            <AuthHeader onBackPress={onBackPress} showBackButton={!!onBackPress} />
+            <AuthHeader onBackPress={onBackPress} showBackButton={!!onBackPress} style={styles.header} />
           )}
 
-          {/* Hero Section */}
-          {showHero && <HeroVehicleSection />}
-
-          {/* Welcome Section */}
-          {showWelcome && (
-            <WelcomeSection title={title} subtitle={subtitle} />
+          {/* Hero Section (now includes branding, title, subtitle) */}
+          {showHero && (
+            <HeroVehicleSection 
+              brandName="LEXICON"
+              title={title}
+              subtitle={subtitle}
+            />
           )}
 
           {/* Form Content */}
@@ -88,6 +86,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
+  },
+  header: {
+    marginBottom: 8,
   },
   formContainer: {
     flex: 1,

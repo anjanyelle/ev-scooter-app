@@ -24,18 +24,34 @@ export const CreateAccountCard: React.FC<CreateAccountCardProps> = ({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      style={[styles.container, style]}
+      style={[
+        styles.container,
+        {
+          borderRadius: theme.radius.card,
+          backgroundColor: theme.colors.glass.background,
+          borderColor: theme.colors.glass.border,
+          borderWidth: 1,
+        },
+        style,
+      ]}
+      accessibilityRole="button"
+      accessibilityLabel="Create Account"
     >
       <View style={styles.content}>
         <View style={styles.textContainer}>
-          <AppText variant="bodyMedium" color="secondary" style={styles.title}>
+          <AppText variant="bodyMedium" style={{ color: theme.colors.text.muted }}>
             Don't have an account?
           </AppText>
-          <AppText variant="bodyMedium" color="primary" style={styles.link}>
-            Create Account
-          </AppText>
+          <View style={styles.linkContainer}>
+            <AppText variant="bodyLarge" style={{ color: theme.colors.primary.DEFAULT, fontWeight: '600' }}>
+              Create Account
+            </AppText>
+            <AppIcon name="arrow-right" size={20} color="primary" style={styles.arrow} />
+          </View>
         </View>
-        <AppIcon name="arrow-right" size={20} color="primary" />
+        <View style={[styles.iconButton, { borderColor: theme.colors.border.DEFAULT }]}>
+          <AppIcon name="account-plus" size={24} color="primary" />
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -44,23 +60,31 @@ export const CreateAccountCard: React.FC<CreateAccountCardProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginTop: 16,
+    overflow: 'hidden',
   },
   content: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
   },
   textContainer: {
+    gap: 4,
+  },
+  linkContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
   },
-  title: {
-    fontSize: 15,
+  arrow: {
+    marginLeft: 4,
   },
-  link: {
-    fontSize: 15,
-    fontWeight: '600',
+  iconButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

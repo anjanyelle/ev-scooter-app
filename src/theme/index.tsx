@@ -11,6 +11,7 @@ import { radius } from './radius';
 import { gradients } from './gradients';
 import { shadows } from './shadows';
 import { icons } from './icons';
+import { sizes } from './sizes';
 
 // Theme context type
 export interface Theme {
@@ -21,6 +22,7 @@ export interface Theme {
   gradients: typeof gradients;
   shadows: typeof shadows;
   icons: typeof icons;
+  sizes: typeof sizes;
 }
 
 // Default theme
@@ -32,6 +34,7 @@ export const defaultTheme: Theme = {
   gradients,
   shadows,
   icons,
+  sizes,
 };
 
 // Theme context
@@ -70,7 +73,7 @@ export const useTheme = (): Theme => {
 };
 
 // Export all theme values
-export { colors, spacing, typography, radius, gradients, shadows, icons };
+export { colors, spacing, typography, radius, gradients, shadows, icons, sizes };
 
 // Export types
 export type { Colors } from './colors';
@@ -80,3 +83,4 @@ export type { Radius } from './radius';
 export type { Gradients } from './gradients';
 export type { Shadows } from './shadows';
 export type { Icons } from './icons';
+export type { Sizes } from './sizes';

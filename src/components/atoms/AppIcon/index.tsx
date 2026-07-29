@@ -28,8 +28,8 @@ export const AppIcon: React.FC<AppIconProps> = ({
   const getColor = (): string => {
     if (color === 'primary') return theme.colors.primary.DEFAULT;
     if (color === 'secondary') return theme.colors.text.secondary;
-    if (color === 'tertiary') return theme.colors.text.tertiary;
-    if (color === 'inverse') return theme.colors.text.inverse;
+    if (color === 'tertiary') return theme.colors.text.muted;
+    if (color === 'inverse') return theme.colors.background.primary;
     if (color === 'success') return theme.colors.accent.success;
     if (color === 'warning') return theme.colors.accent.warning;
     if (color === 'error') return theme.colors.accent.error;

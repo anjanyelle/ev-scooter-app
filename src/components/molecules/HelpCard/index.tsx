@@ -24,21 +24,29 @@ export const HelpCard: React.FC<HelpCardProps> = ({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      style={[styles.container, style]}
+      style={[
+        styles.container,
+        {
+          borderRadius: theme.radius.card,
+          backgroundColor: theme.colors.glass.background,
+          borderColor: theme.colors.glass.border,
+          borderWidth: 1,
+        },
+        style,
+      ]}
+      accessibilityRole="button"
+      accessibilityLabel="Need Help?"
     >
       <View style={styles.content}>
         <View style={styles.iconContainer}>
-          <AppIcon name="help-circle-outline" size={24} color="primary" />
+          <AppIcon name="headphones" size={24} color="primary" />
         </View>
         <View style={styles.textContainer}>
-          <AppText variant="labelMedium" color="primary" style={styles.title}>
+          <AppText variant="bodyLarge" color="primary" style={styles.title}>
             Need Help?
           </AppText>
-          <AppText variant="bodySmall" color="secondary" style={styles.subtitle}>
-            Contact our support team
-          </AppText>
         </View>
-        <AppIcon name="arrow-right" size={20} color="tertiary" />
+        <AppIcon name="chevron-right" size={24} color="secondary" />
       </View>
     </TouchableOpacity>
   );
@@ -47,27 +55,23 @@ export const HelpCard: React.FC<HelpCardProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginTop: 16,
+    overflow: 'hidden',
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    paddingVertical: 18,
+    paddingHorizontal: 20,
   },
   iconContainer: {
     marginRight: 12,
   },
   textContainer: {
     flex: 1,
+    alignItems: 'center',
+    paddingRight: 36, // offset icon width to truly center the text
   },
   title: {
-    marginBottom: 2,
-  },
-  subtitle: {
-    fontSize: 13,
+    fontWeight: '500',
   },
 });

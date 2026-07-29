@@ -30,7 +30,7 @@ export const AppImage: React.FC<AppImageProps> = ({
         styles.image,
         {
           borderRadius: borderRadius || theme.radius.md,
-          backgroundColor: backgroundColor || theme.colors.surface.DEFAULT,
+          backgroundColor: backgroundColor || theme.colors.background.surface,
         },
         style,
       ]}

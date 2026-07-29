@@ -64,6 +64,7 @@ export const icons = {
   arrowRight: 'arrow-right',
   arrowDown: 'chevron-down',
   arrowUp: 'chevron-up',
+  arrowLeft: 'arrow-left',
   calendar: 'calendar-outline',
   clock: 'clock-outline',
   map: 'map-outline',

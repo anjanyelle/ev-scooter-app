@@ -8,39 +8,39 @@ import { LinearGradientProps } from 'react-native-linear-gradient';
 export const gradients = {
   // Background gradients
   background: {
-    primary: ['#0A0E27', '#111640', '#1A1F4E'],
-    secondary: ['#111640', '#1A1F4E'],
-    tertiary: ['#1A1F4E', '#252A5C'],
+    primary: ['#050505', '#0C0F07', '#050505'],
+    secondary: ['#0C0F07', '#050505'],
+    tertiary: ['#111111', '#050505'],
   },
 
   // Button gradients
   button: {
-    primary: ['#00E5FF', '#00B8D4'],
-    secondary: ['#18FFFF', '#00E5FF'],
-    success: ['#00E676', '#00C853'],
-    warning: ['#FFB300', '#FF8F00'],
-    error: ['#FF5252', '#D32F2F'],
+    primary: ['#B8DC00', '#D8FF2F'],
+    secondary: ['rgba(184, 220, 0, 0.1)', 'rgba(216, 255, 47, 0.1)'],
+    success: ['#72E000', '#8BF01A'],
+    warning: ['#FFC857', '#FFD880'],
+    error: ['#FF5A5F', '#FF7D81'],
   },
 
   // Card gradients
   card: {
-    default: ['rgba(30, 35, 73, 0.8)', 'rgba(37, 42, 92, 0.6)'],
-    elevated: ['rgba(37, 42, 92, 0.9)', 'rgba(30, 35, 73, 0.7)'],
-    glass: ['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)'],
+    default: ['rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.02)'],
+    elevated: ['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.03)'],
+    glass: ['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.02)'],
   },
 
   // Overlay gradients
   overlay: {
-    dark: ['rgba(10, 14, 39, 0.9)', 'rgba(10, 14, 39, 0.7)'],
-    light: ['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.05)'],
+    dark: ['rgba(5, 5, 5, 0.9)', 'rgba(5, 5, 5, 0.7)'],
+    light: ['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)'],
   },
 
   // Accent gradients
   accent: {
-    glow: ['rgba(0, 229, 255, 0.3)', 'rgba(0, 229, 255, 0.1)'],
-    success: ['rgba(0, 230, 118, 0.2)', 'rgba(0, 230, 118, 0.05)'],
-    warning: ['rgba(255, 179, 0, 0.2)', 'rgba(255, 179, 0, 0.05)'],
-    error: ['rgba(255, 82, 82, 0.2)', 'rgba(255, 82, 82, 0.05)'],
+    glow: ['rgba(184, 220, 0, 0.25)', 'transparent'],
+    success: ['rgba(114, 224, 0, 0.2)', 'transparent'],
+    warning: ['rgba(255, 200, 87, 0.2)', 'transparent'],
+    error: ['rgba(255, 90, 95, 0.2)', 'transparent'],
   },
 } as const;
 

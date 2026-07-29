@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MainStackParamList, BottomTabParamList } from './types';
 import { AppIcon } from '../components/atoms/AppIcon';
@@ -26,7 +25,7 @@ export const AppNavigator: React.FC = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: theme.colors.surface.DEFAULT,
+          backgroundColor: theme.colors.background.surface,
           borderTopColor: theme.colors.border.DEFAULT,
           borderTopWidth: 1,
           height: 70,
@@ -34,7 +33,7 @@ export const AppNavigator: React.FC = () => {
           paddingTop: 8,
         },
         tabBarActiveTintColor: theme.colors.primary.DEFAULT,
-        tabBarInactiveTintColor: theme.colors.text.tertiary,
+        tabBarInactiveTintColor: theme.colors.text.muted,
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '500',

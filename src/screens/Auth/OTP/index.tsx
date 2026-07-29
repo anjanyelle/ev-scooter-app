@@ -34,9 +34,8 @@ export const OTPScreen: React.FC<OTPScreenProps> = ({
     <AuthTemplate
       showHero={true}
       showHeader={true}
-      showWelcome={true}
-      title="Verify OTP"
-      subtitle="Enter the code sent to your phone"
+      title="Verify Account"
+      subtitle="Enter the verification code sent to your phone"
       onBackPress={handleBackPress}
     >
       <View style={styles.formWrapper}>

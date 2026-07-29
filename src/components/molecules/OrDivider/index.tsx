@@ -20,12 +20,12 @@ export const OrDivider: React.FC<OrDividerProps> = ({
   const theme = useTheme();
 
   return (
-    <View style={[styles.container, style]}>
-      <View style={[styles.line, { backgroundColor: theme.colors.border.DEFAULT }]} />
-      <AppText variant="labelMedium" color="tertiary" style={styles.text}>
+    <View style={[styles.container, style]} accessibilityRole="progressbar" accessibilityLabel="Divider">
+      <View style={[styles.line, { backgroundColor: theme.colors.border.divider }]} />
+      <AppText variant="labelMedium" style={[styles.text, { color: theme.colors.text.secondary }]}>
         {text}
       </AppText>
-      <View style={[styles.line, { backgroundColor: theme.colors.border.DEFAULT }]} />
+      <View style={[styles.line, { backgroundColor: theme.colors.border.divider }]} />
     </View>
   );
 };

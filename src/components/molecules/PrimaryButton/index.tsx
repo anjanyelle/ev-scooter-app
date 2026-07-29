@@ -15,6 +15,7 @@ export interface PrimaryButtonProps extends Omit<TouchableOpacityProps, 'childre
   loading?: boolean;
   onPress: () => void;
   style?: ViewStyle;
+  showArrow?: boolean;
 }
 
 export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
@@ -23,6 +24,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   loading = false,
   onPress,
   style,
+  showArrow = true,
   ...props
 }) => {
   const theme = useTheme();
@@ -33,6 +35,9 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       disabled={disabled || loading}
       activeOpacity={0.8}
       style={style}
+      accessibilityRole="button"
+      accessibilityLabel={title}
+      accessibilityState={{ disabled: disabled || loading, busy: loading }}
       {...props}
     >
       <LinearGradient
@@ -44,12 +49,22 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
           {
             borderRadius: theme.radius.button,
             opacity: disabled || loading ? 0.5 : 1,
+            shadowColor: theme.colors.primary.glow,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.8,
+            shadowRadius: 15,
+            elevation: 8,
           },
         ]}
       >
-        <AppText variant="button" color="inverse">
+        <AppText variant="button" style={{ color: theme.colors.background.primary }}>
           {title}
         </AppText>
+        {showArrow && (
+          <AppText variant="button" style={[styles.arrow, { color: theme.colors.background.primary }]}>
+            →
+          </AppText>
+        )}
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -61,6 +76,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
     minHeight: 52,
+  },
+  arrow: {
+    marginLeft: 8,
   },
 });

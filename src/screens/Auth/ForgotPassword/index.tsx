@@ -33,9 +33,8 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
     <AuthTemplate
       showHero={true}
       showHeader={true}
-      showWelcome={true}
-      title="Reset Password"
-      subtitle="Enter your phone number to receive a reset code"
+      title="Forgot Password"
+      subtitle="Enter your email or phone to reset your password"
       onBackPress={handleBackPress}
     >
       <View style={styles.formWrapper}>
