@@ -148,25 +148,17 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
           </View>
         </View>
 
-        {/* Right: Scooter image with glow */}
-        <View style={styles.imageSection}>
-          {/* Glow rings */}
-          <Animated.View style={[styles.glowRing3, { opacity: glowAnim }]} />
-          <View style={styles.glowRing2} />
-          <View style={styles.glowRing1} />
-          {/* Ground glow */}
-          <Animated.View style={[styles.groundGlow, { opacity: glowAnim }]} />
+        {/* Right: Scooter image */}
+        <Animated.View style={styles.imageSection}>
           <Animated.Image
-            source={{
-              uri: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-            }}
+            source={require('../assets/lexicon-scooter.png')}
             style={[
               styles.scooterImage,
-              { transform: [{ translateY: floatAnim }] },
+              { transform: [{ translateY: floatAnim }, { scaleX: -1 }] },
             ]}
             resizeMode="contain"
           />
-        </View>
+        </Animated.View>
       </View>
 
       {/* Slide to Unlock - full width primary button */}
@@ -285,12 +277,13 @@ const styles = StyleSheet.create({
   middleSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 170,
+    minHeight: 220,
   },
   batterySection: {
     flex: 1,
-    gap: 4,
+    gap: 6,
     zIndex: 2,
+    justifyContent: 'center',
   },
   batteryLabel: {
     fontSize: Typography.fontSize.sm,
@@ -348,46 +341,15 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   imageSection: {
-    flex: 1,
-    height: 170,
+    flex: 1.3,
+    height: 220,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
   },
-  glowRing3: {
-    position: 'absolute',
+  scooterImage: {
     width: 220,
     height: 220,
-    borderRadius: 110,
-    backgroundColor: Colors.primary,
-  },
-  glowRing2: {
-    position: 'absolute',
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    borderWidth: 1,
-    borderColor: Colors.primary + '25',
-  },
-  glowRing1: {
-    position: 'absolute',
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    borderWidth: 1.5,
-    borderColor: Colors.primary + '40',
-  },
-  groundGlow: {
-    position: 'absolute',
-    bottom: 8,
-    width: 130,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: Colors.primary,
-  },
-  scooterImage: {
-    width: '100%',
-    height: '100%',
     zIndex: 1,
   },
   unlockButton: {
