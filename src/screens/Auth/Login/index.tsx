@@ -4,21 +4,20 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
-import { useTheme } from '../../../theme';
+import { View, StyleSheet } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '../../../navigation/types';
 import { AuthTemplate } from '../../../components/templates/AuthTemplate';
 import { LoginForm } from '../../../components/organisms/LoginForm';
-import { Spacer } from '../../../components/atoms/Spacer';
+// import { Spacer } from '../../../components/atoms/Spacer';
 
 export interface LoginScreenProps {
-  navigation: any;
+  navigation: NativeStackNavigationProp<AuthStackParamList, 'Login'>;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({
   navigation,
 }) => {
-  const theme = useTheme();
-
   const handleLogin = (phone: string, password?: string) => {
     console.log('Login attempt:', { phone, password });
     // TODO: Implement login logic
@@ -51,7 +50,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       onBackPress={handleBackPress}
     >
       <View style={styles.formWrapper}>
-        <Spacer size="lg" />
+        {/* <Spacer size="lg" /> */}
         <LoginForm
           mode="phone"
           onLogin={handleLogin}

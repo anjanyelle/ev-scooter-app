@@ -70,7 +70,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
             placeholderTextColor={theme.colors.text.muted}
             keyboardType="phone-pad"
           />
-          <AppIcon name="cellphone-outline" size={20} color="tertiary" style={styles.rightIcon} />
+          <AppIcon name="cellphone-outline" size={22} color="primary" style={styles.rightIcon} />
         </View>
       </View>
       {error && (

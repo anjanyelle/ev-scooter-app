@@ -39,7 +39,7 @@ export const HelpCard: React.FC<HelpCardProps> = ({
     >
       <View style={styles.content}>
         <View style={styles.iconContainer}>
-          <AppIcon name="headphones" size={24} color="primary" />
+          <AppIcon name="headset" size={24} color="primary" />
         </View>
         <View style={styles.textContainer}>
           <AppText variant="bodyLarge" color="primary" style={styles.title}>

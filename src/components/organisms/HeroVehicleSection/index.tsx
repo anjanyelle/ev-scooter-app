@@ -36,7 +36,7 @@ export const HeroVehicleSection: React.FC<HeroVehicleSectionProps> = ({
     <View style={[styles.container, style]}>
       {/* Background Bike Image */}
       <View style={styles.imageWrapper}>
-        {showGlow && (
+        {/* {showGlow && (
           <View style={styles.glowContainer}>
             <LinearGradient
               colors={[...theme.gradients.accent.glow]}
@@ -45,7 +45,7 @@ export const HeroVehicleSection: React.FC<HeroVehicleSectionProps> = ({
               style={styles.glow}
             />
           </View>
-        )}
+        )} */}
         <AppImage
           source={image}
           resizeMode="contain"
@@ -85,30 +85,30 @@ export const HeroVehicleSection: React.FC<HeroVehicleSectionProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    minHeight: 280,
-    justifyContent: 'center',
+    height: 175,
+    justifyContent: 'flex-end',
     position: 'relative',
     overflow: 'visible',
-    marginTop: 8,
+    marginTop: 0,
   },
   contentContainer: {
-    width: '100%',
+    width: '48%',
     zIndex: 2,
-    paddingTop: 12,
-    paddingBottom: 24,
+    paddingTop: 0,
+    paddingBottom: 14,
   },
   brandContainer: {
     width: '100%',
     alignItems: 'flex-start',
-    marginBottom: 40,
+    marginBottom: 4,
   },
   imageWrapper: {
     position: 'absolute',
-    top: -20,
-    right: -60,
-    width: 320,
-    height: 320,
-    zIndex: 1,
+    top: 0,
+    right: 0,
+    width: 220,
+    height: 170,
+    zIndex: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -116,29 +116,30 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
     left: '50%',
-    transform: [{ translateX: -75 }, { translateY: -75 }],
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    opacity: 0.8,
+    transform: [{ translateX: -95 }, { translateY: -95 }],
+    width: 190,
+    height: 190,
+    borderRadius: 95,
+    opacity: 0.30,
   },
   glow: {
     flex: 1,
-    borderRadius: 75,
+    borderRadius: 80,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: '170%',
+    height: '145%',
   },
   titleContainer: {
     width: '100%',
     alignItems: 'flex-start',
-    marginBottom: 16,
-  },
-  title: {
     marginBottom: 8,
   },
+  title: {
+    marginBottom: 6,
+  },
   subtitle: {
-    opacity: 0.8,
+    opacity: 0.85,
+    lineHeight: 20,
   },
 });

@@ -86,11 +86,14 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
+    paddingBottom: 30,
   },
   header: {
-    marginBottom: 8,
+    marginBottom: 4,
   },
   formContainer: {
     flex: 1,
+    marginTop: -28,
+    zIndex: 5,
   },
 });

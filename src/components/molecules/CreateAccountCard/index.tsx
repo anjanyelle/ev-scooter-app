@@ -50,7 +50,7 @@ export const CreateAccountCard: React.FC<CreateAccountCardProps> = ({
           </View>
         </View>
         <View style={[styles.iconButton, { borderColor: theme.colors.border.DEFAULT }]}>
-          <AppIcon name="account-plus" size={24} color="primary" />
+          <AppIcon name="account-plus-outline" size={24} color="primary" />
         </View>
       </View>
     </TouchableOpacity>

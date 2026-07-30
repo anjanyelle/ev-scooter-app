@@ -4,22 +4,21 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
-import { useTheme } from '../../../theme';
+import { View, StyleSheet } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '../../../navigation/types';
 import { AuthTemplate } from '../../../components/templates/AuthTemplate';
 import { Spacer } from '../../../components/atoms/Spacer';
 import { AppText } from '../../../components/atoms/AppText';
 import { PrimaryButton } from '../../../components/molecules/PrimaryButton';
 
 export interface ForgotPasswordScreenProps {
-  navigation: any;
+  navigation: NativeStackNavigationProp<AuthStackParamList, 'ForgotPassword'>;
 }
 
 export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
-  const theme = useTheme();
-
   const handleResetPassword = () => {
     console.log('Password reset attempt');
     // TODO: Implement password reset logic

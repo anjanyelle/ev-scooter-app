@@ -4,22 +4,21 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
-import { useTheme } from '../../../theme';
+import { View, StyleSheet } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '../../../navigation/types';
 import { AuthTemplate } from '../../../components/templates/AuthTemplate';
 import { Spacer } from '../../../components/atoms/Spacer';
 import { AppText } from '../../../components/atoms/AppText';
 import { PrimaryButton } from '../../../components/molecules/PrimaryButton';
 
 export interface OTPScreenProps {
-  navigation: any;
+  navigation: NativeStackNavigationProp<AuthStackParamList, 'OTP'>;
 }
 
 export const OTPScreen: React.FC<OTPScreenProps> = ({
   navigation,
 }) => {
-  const theme = useTheme();
-
   const handleVerifyOTP = () => {
     console.log('OTP verification attempt');
     // TODO: Implement OTP verification logic

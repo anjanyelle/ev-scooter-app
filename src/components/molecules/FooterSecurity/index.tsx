@@ -18,7 +18,7 @@ export const FooterSecurity: React.FC<FooterSecurityProps> = ({ style }) => {
 
   return (
     <View style={[styles.container, style]}>
-      <AppIcon name="lock-outline" size={16} color="primary" style={styles.icon} />
+      <AppIcon name="sheild-lock-outline" size={16} color="primary" style={styles.icon} />
       <AppText variant="caption" style={[styles.text, { color: theme.colors.text.secondary }]}>
         Your data is safe and secure with <AppText variant="caption" style={{ color: theme.colors.primary.DEFAULT }}>LEXICON Connect</AppText>
       </AppText>
