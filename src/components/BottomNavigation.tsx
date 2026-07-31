@@ -1,6 +1,12 @@
 /**
  * BottomNavigation Component
  * Bottom tab navigation with floating center EV icon
+ * 
+ * SPECIFICATION MATCH:
+ * - Height: 82dp
+ * - Center button: 72x72, floating, centered
+ * - Home, Ride, Center Button, Service, Profile
+ * - No fixed widths, uses flex
  */
 
 import React from 'react';
@@ -105,9 +111,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
-    height: 70,
+    height: 82,
   },
   tabButton: {
     flex: 1,
@@ -140,11 +145,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   centerTabButton: {
-    width: 64,
-    height: 64,
+    width: 72,
+    height: 72,
     borderRadius: Radius.full,
     ...Shadows.glow,
-    marginTop: -30,
+    marginTop: -36,
     borderWidth: 4,
     borderColor: Colors.background,
   },

@@ -1,6 +1,14 @@
 /**
  * WeatherCard Component
  * Compact weather card matching the reference design
+ * 
+ * SPECIFICATION MATCH:
+ * - Height: 90dp
+ * - Border Radius: 16dp
+ * - Temperature aligned left
+ * - Weather icon aligned right
+ * - Location at bottom
+ * - No fixed widths, uses flex
  */
 
 import React from 'react';
@@ -40,7 +48,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
       {/* Temperature + icon row */}
       <View style={styles.topRow}>
         <Text style={styles.temperature}>{temperature}°C</Text>
-        <Icon name={getWeatherIcon()} size={36} color={Colors.primary} />
+        <Icon name={getWeatherIcon()} size={28} color={Colors.primary} />
       </View>
 
       {/* Condition */}
@@ -48,7 +56,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
 
       {/* Location */}
       <View style={styles.locationRow}>
-        <Icon name="map-marker" size={13} color={Colors.primary} />
+        <Icon name="map-marker" size={12} color={Colors.primary} />
         <Text style={styles.locationText}>{location}</Text>
       </View>
     </LinearGradient>
@@ -57,12 +65,13 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: Spacing.lg,
-    borderRadius: Radius.xl,
+    flex: 1,
+    padding: Spacing.md,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: '#2A2A2A',
     ...Shadows.medium,
-    gap: 3,
+    gap: 2,
     justifyContent: 'center',
   },
   topRow: {
@@ -71,12 +80,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   temperature: {
-    fontSize: Typography.fontSize.xxxl,
+    fontSize: Typography.fontSize.xxl,
     fontWeight: Typography.fontWeight.bold,
     color: Colors.text,
   },
   condition: {
-    fontSize: Typography.fontSize.md,
+    fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.medium,
     color: Colors.textSecondary,
   },
@@ -87,7 +96,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   locationText: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: Typography.fontSize.xs,
     color: Colors.textSecondary,
   },
 });

@@ -1,6 +1,14 @@
 /**
  * ServiceCard Component
- * "Need Service?" card with scooter thumbnail on left, text + Book button on right
+ * "Need Service?" card with scooter thumbnail on left, text center, button right
+ * 
+ * SPECIFICATION MATCH:
+ * - Full width
+ * - Height: 90dp
+ * - Service image left
+ * - Text center
+ * - Button right
+ * - Padding: 16dp
  */
 
 import React from 'react';
@@ -39,25 +47,24 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         />
       </View>
 
-      {/* Right: text + button */}
-      <View style={styles.rightContent}>
-        <View style={styles.textBlock}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.description}>{description}</Text>
-        </View>
-
-        <TouchableOpacity onPress={onBookService} activeOpacity={0.85} style={styles.ctaWrapper}>
-          <LinearGradient
-            colors={[Colors.primary, Colors.primaryDark]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.ctaButton}
-          >
-            <Text style={styles.ctaText}>Book Service</Text>
-            <Icon name="chevron-right" size={16} color={Colors.background} />
-          </LinearGradient>
-        </TouchableOpacity>
+      {/* Center: text block */}
+      <View style={styles.textBlock}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.description}>{description}</Text>
       </View>
+
+      {/* Right: button */}
+      <TouchableOpacity onPress={onBookService} activeOpacity={0.85} style={styles.ctaWrapper}>
+        <LinearGradient
+          colors={[Colors.primary, Colors.primaryDark]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.ctaButton}
+        >
+          <Text style={styles.ctaText}>Book Service</Text>
+          <Icon name="chevron-right" size={16} color={Colors.background} />
+        </LinearGradient>
+      </TouchableOpacity>
     </LinearGradient>
   );
 };
@@ -65,7 +72,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    padding: Spacing.md,
+    height: 90,
+    padding: 16,
     borderRadius: Radius.xl,
     borderWidth: 1,
     borderColor: '#2A2A2A',
@@ -75,30 +83,27 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   imageContainer: {
-    width: 90,
-    height: 80,
+    width: 70,
+    height: 60,
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
   },
   imageGlow: {
     position: 'absolute',
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: Colors.primary,
     opacity: 0.12,
   },
   scooterImage: {
-    width: 90,
-    height: 80,
+    width: 70,
+    height: 60,
     zIndex: 1,
   },
-  rightContent: {
-    flex: 1,
-    gap: Spacing.sm,
-  },
   textBlock: {
+    flex: 1,
     gap: 3,
   },
   title: {
@@ -114,7 +119,6 @@ const styles = StyleSheet.create({
   ctaWrapper: {
     borderRadius: Radius.md,
     overflow: 'hidden',
-    alignSelf: 'flex-start',
   },
   ctaButton: {
     flexDirection: 'row',

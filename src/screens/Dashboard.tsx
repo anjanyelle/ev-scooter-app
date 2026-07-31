@@ -1,6 +1,16 @@
 /**
  * Dashboard Screen
  * Main dashboard screen displaying all EV scooter information
+ * 
+ * RESPONSIVE LAYOUT FIXES:
+ * - All hardcoded widths removed, replaced with flex:1
+ * - Both top cards now equal width (flex:1)
+ * - Map + RideChart now equal halves (flex:1)
+ * - Service card height is content-driven (no fixed height)
+ * - useWindowDimensions for responsive breakpoints
+ * - Consistent 16dp padding on all sides
+ * - SafeAreaView enabled for notch support
+ * - Flexbox layout throughout
  */
 
 import React from 'react';
@@ -13,6 +23,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -33,6 +44,8 @@ const Dashboard: React.FC = () => {
   const insets = useSafeAreaInsets();
   const route = useRoute();
   const navigation = useNavigation<any>();
+  const { width: screenWidth } = useWindowDimensions();
+  const isSmallScreen = screenWidth <= 360;
 
   // Map route names to tab ids
   const activeTab: TabType = (() => {
@@ -63,6 +76,10 @@ const Dashboard: React.FC = () => {
     navigation.navigate(routeMap[tab]);
   };
 
+  // Responsive spacing: smaller gaps on small screens
+  const sectionGap = isSmallScreen ? 12 : 16;
+  const cardGap = isSmallScreen ? 8 : 12;
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
@@ -78,15 +95,15 @@ const Dashboard: React.FC = () => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {/* Conditional rendering based on activeTab */}
           {activeTab === 'home' && (
             <>
-              {/* Greeting Section */}
-              <View style={styles.row}>
-                <View style={styles.greetingContainer}>
+              {/* TOP CARDS ROW - Two equal cards using flex:1 */}
+              {/* Both cards get equal width for consistent sizing */}
+              <View style={[styles.topCardsRow, { gap: cardGap }]}>
+                <View style={styles.topCardWrapper}>
                   <GreetingCard userName="Rider" timeOfDay="morning" />
                 </View>
-                <View style={styles.weatherContainer}>
+                <View style={styles.topCardWrapper}>
                   <WeatherCard
                     temperature={27}
                     condition="Clear"
@@ -95,8 +112,8 @@ const Dashboard: React.FC = () => {
                 </View>
               </View>
 
-              {/* Vehicle Card */}
-              <View style={styles.section}>
+              {/* VEHICLE CARD - Full width with padding */}
+              <View style={[styles.vehicleCardWrapper, { marginTop: sectionGap }]}>
                 <VehicleCard
                   vehicleName="Lexicon X1"
                   batteryPercentage={76}
@@ -111,33 +128,65 @@ const Dashboard: React.FC = () => {
                 />
               </View>
 
-              {/* Statistics Section */}
-              <View style={styles.section}>
-                <View style={styles.statisticsRow}>
-                  <StatisticsCard
-                    icon="battery-heart"
-                    label="Battery Health"
-                    value="Good"
-                    subValue="80%"
-                  />
-                  <StatisticsCard
-                    icon="battery-charging"
-                    label="Charging"
-                    value="80%"
+              {/* STATISTICS SECTION - 2 rows, 2 cards each, equal width */}
+              <View style={[styles.statsSection, { marginTop: sectionGap }]}>
+                <View style={[styles.statsRow, { gap: cardGap }]}>
+                  <View style={styles.statCardWrapper}>
+                    <StatisticsCard
+                      icon="battery-heart"
+                      label="Battery Health"
+                      value="Good"
+                      subValue="80%"
+                    />
+                  </View>
+                  <View style={styles.statCardWrapper}>
+                    <StatisticsCard
+                      icon="battery-charging"
+                      label="Last Charge"
+                      value="80%"
+                    />
+                  </View>
+                </View>
+                <View style={[styles.statsRow, { gap: cardGap }]}>
+                  <View style={styles.statCardWrapper}>
+                    <StatisticsCard
+                      icon="motorcycle"
+                      label="Total Rides"
+                      value="128"
+                    />
+                  </View>
+                  <View style={styles.statCardWrapper}>
+                    <StatisticsCard
+                      icon="map-marker-distance"
+                      label="Distance"
+                      value="523 km"
+                    />
+                  </View>
+                </View>
+              </View>
+
+              {/* MAP + RIDE CHART SIDE BY SIDE - Equal halves using flex:1 */}
+              <View style={[styles.mapRideRow, { marginTop: sectionGap, gap: cardGap }]}>
+                <View style={styles.mapRideHalf}>
+                  <MapCard
+                    onFindChargers={() => console.log('Find chargers pressed')}
+                    chargerCount={3}
                   />
                 </View>
-                <View style={styles.statisticsRow}>
-                  <StatisticsCard
-                    icon="motorcycle"
-                    label="Total Rides"
-                    value="128"
-                  />
-                  <StatisticsCard
-                    icon="map-marker-distance"
-                    label="Distance"
-                    value="523 km"
+                <View style={styles.mapRideHalf}>
+                  <RideChart
+                    data={[12, 19, 8, 15, 22, 10, 48]}
+                    labels={['M', 'T', 'W', 'T', 'F', 'S', 'S']}
+                    totalDistance={48}
                   />
                 </View>
+              </View>
+
+              {/* SERVICE CARD - Content-driven height, no fixed height */}
+              <View style={[styles.serviceSection, { marginTop: sectionGap }]}>
+                <ServiceCard
+                  onBookService={() => console.log('Book service pressed')}
+                />
               </View>
             </>
           )}
@@ -195,7 +244,6 @@ const Dashboard: React.FC = () => {
                 </View>
               </LinearGradient>
 
-              {/* Stats row */}
               <View style={styles.profileStatsRow}>
                 <View style={styles.profileStatCard}>
                   <Icon name="leaf" size={20} color={Colors.primary} />
@@ -209,7 +257,6 @@ const Dashboard: React.FC = () => {
                 </View>
               </View>
 
-              {/* Menu Options */}
               <View style={styles.profileMenu}>
                 <TouchableOpacity style={styles.profileMenuItem}>
                   <View style={styles.profileMenuItemLeft}>
@@ -238,11 +285,9 @@ const Dashboard: React.FC = () => {
             </View>
           )}
 
-          {/* Bottom padding for navigation */}
           <View style={styles.bottomPadding} />
         </ScrollView>
 
-        {/* Bottom Navigation */}
         <BottomNavigation
           activeTab={activeTab}
           onTabChange={handleTabChange}
@@ -264,30 +309,63 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: Spacing.md,
-    gap: Spacing.md,
+    paddingBottom: Spacing.xl,
   },
-  row: {
+
+  // TOP CARDS ROW - Two equal flex:1 cards with consistent padding
+  topCardsRow: {
     flexDirection: 'row',
-    gap: Spacing.md,
+    marginTop: 16,
+    paddingHorizontal: 16,
   },
-  greetingContainer: {
+  topCardWrapper: {
+    flex: 1,
+    height: 90,
+  },
+
+  // VEHICLE CARD - Full width with padding
+  vehicleCardWrapper: {
+    paddingHorizontal: 16,
+  },
+
+  // STATISTICS SECTION - 2 rows, 2 equal cards each
+  statsSection: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  statsRow: {
+    flexDirection: 'row',
+  },
+  statCardWrapper: {
     flex: 1,
   },
-  weatherContainer: {
+
+  // MAP + RIDE CHART - Equal halves using flex:1
+  mapRideRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+  },
+  mapRideHalf: {
     flex: 1,
   },
+
+  // SERVICE CARD - Full width, content-driven height
+  serviceSection: {
+    paddingHorizontal: 16,
+  },
+
   section: {
-    gap: Spacing.sm,
-  },
-  statisticsRow: {
-    flexDirection: 'row',
-    gap: Spacing.md,
+    paddingHorizontal: 16,
+    marginTop: 16,
   },
   bottomPadding: {
     height: Spacing.xl,
   },
+
+  // PROFILE SECTION
   profileContainer: {
+    paddingHorizontal: 16,
+    marginTop: 16,
     gap: Spacing.md,
   },
   profileHeaderCard: {

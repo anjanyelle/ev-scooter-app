@@ -1,6 +1,18 @@
 /**
  * Header Component
  * Displays the app header with hamburger menu, logo, notifications, and profile
+ * 
+ * SPECIFICATION MATCH:
+ * - Header Height: 64dp
+ * - Horizontal Padding: 16dp
+ * - Menu icon: 24x24
+ * - Logo: 40x40
+ * - App Name: fontSize 22, fontWeight 700, marginLeft 10
+ * - Notification icon: 24x24
+ * - Gap between notification and profile: 16dp
+ * - Profile image: 40x40 circular
+ * - justifyContent: 'space-between', alignItems: 'center'
+ * - No overflow, fully responsive
  */
 
 import React from 'react';
@@ -10,6 +22,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  SafeAreaView,
+  useWindowDimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors, Spacing, Radius, Shadows, Typography } from '../theme';
@@ -25,72 +39,101 @@ const Header: React.FC<HeaderProps> = ({
   onNotificationPress,
   onProfilePress,
 }) => {
+  const { width: screenWidth } = useWindowDimensions();
+  const isSmallScreen = screenWidth <= 360;
+  const isExtraSmallScreen = screenWidth <= 320;
+
+  // Responsive values: scale down on small screens while keeping proportions
+  const titleFontSize = isExtraSmallScreen ? 18 : isSmallScreen ? 20 : 22;
+  const logoSize = isExtraSmallScreen ? 34 : 40;
+  const profileSize = isExtraSmallScreen ? 34 : 40;
+  const iconSize = isExtraSmallScreen ? 22 : 24;
+  const titleMarginLeft = isExtraSmallScreen ? 6 : 10;
+
   return (
-    <View style={styles.container}>
-      {/* Left - Hamburger Menu */}
-      <TouchableOpacity
-        style={styles.iconButton}
-        onPress={onMenuPress}
-        activeOpacity={0.7}
-      >
-        <Icon name="menu" size={28} color={Colors.text} />
-      </TouchableOpacity>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {/* Left Section - Menu + Logo + Title */}
+        <View style={styles.leftSection}>
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={onMenuPress}
+            activeOpacity={0.7}
+          >
+            <Icon name="menu" size={iconSize} color={Colors.text} />
+          </TouchableOpacity>
 
-      {/* Center - Logo and Brand Name */}
-      <View style={styles.centerContainer}>
-        <View style={styles.logoContainer}>
-          <Icon name="lightning-bolt" size={26} color={Colors.primary} />
+          <View style={[styles.logoContainer, { width: logoSize, height: logoSize }]}>
+            <Icon name="lightning-bolt" size={logoSize * 0.6} color={Colors.primary} />
+          </View>
+
+          <Text
+            style={[styles.brandText, { fontSize: titleFontSize, marginLeft: titleMarginLeft }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            LEXICON EV
+          </Text>
         </View>
-        <Text style={styles.brandText}>LEXICON EV</Text>
-      </View>
 
-      {/* Right - Notification and Profile */}
-      <View style={styles.rightContainer}>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={onNotificationPress}
-          activeOpacity={0.7}
-        >
-          <Icon name="bell-outline" size={24} color={Colors.text} />
-          <View style={styles.notificationDot} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.profileButton}
-          onPress={onProfilePress}
-          activeOpacity={0.7}
-        >
-          <Image
-            source={{ uri: 'https://i.pravatar.cc/100?img=12' }}
-            style={styles.profileImage}
-          />
-        </TouchableOpacity>
+        {/* Right Section - Notification + Profile */}
+        <View style={styles.rightSection}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={onNotificationPress}
+            activeOpacity={0.7}
+          >
+            <View style={styles.notificationIconWrapper}>
+              <Icon name="bell-outline" size={24} color={Colors.text} />
+              <View style={styles.notificationDot} />
+            </View>
+          </TouchableOpacity>
+
+          {/* 16dp gap between notification and profile */}
+          <View style={styles.profileGap} />
+
+          <TouchableOpacity
+            style={[styles.profileButton, { width: profileSize, height: profileSize }]}
+            onPress={onProfilePress}
+            activeOpacity={0.7}
+          >
+            <Image
+              source={{ uri: 'https://i.pravatar.cc/100?img=12' }}
+              style={styles.profileImage}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: Colors.background,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
+    height: 64,
+    paddingHorizontal: 16,
     backgroundColor: Colors.background,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  iconButton: {
-    padding: Spacing.xs,
-  },
-  centerContainer: {
+  leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.sm,
+    flexShrink: 1,
   },
-  logoContainer: {
+  menuButton: {
     width: 40,
     height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoContainer: {
     borderRadius: Radius.lg,
     backgroundColor: Colors.glass,
     alignItems: 'center',
@@ -100,29 +143,40 @@ const styles = StyleSheet.create({
     ...Shadows.glow,
   },
   brandText: {
-    fontSize: Typography.fontSize.lg,
-    fontWeight: Typography.fontWeight.bold,
+    fontWeight: '700',
     color: Colors.text,
     letterSpacing: 1.5,
+    flexShrink: 1,
   },
-  rightContainer: {
+  rightSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.sm,
+  },
+  iconButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notificationIconWrapper: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   notificationDot: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: -2,
+    right: -2,
     width: 8,
     height: 8,
     borderRadius: Radius.full,
     backgroundColor: Colors.primary,
     ...Shadows.small,
   },
+  profileGap: {
+    width: 16,
+  },
   profileButton: {
-    width: 40,
-    height: 40,
     borderRadius: Radius.full,
     overflow: 'hidden',
     borderWidth: 2,

@@ -1,6 +1,12 @@
 /**
  * MapCard Component
- * Compact "Find Nearby Chargers" card matching the reference design
+ * "Find Nearby Chargers" card for side-by-side layout with RideChart
+ * 
+ * SPECIFICATION MATCH:
+ * - Left half of a row (50% width)
+ * - Height: 130dp (set by parent container)
+ * - Compact layout for side-by-side display
+ * - Find Charger info + CTA button
  */
 
 import React from 'react';
@@ -27,19 +33,19 @@ const MapCard: React.FC<MapCardProps> = ({
     >
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Find Nearby Chargers</Text>
-        <Icon name="chevron-right" size={18} color={Colors.textSecondary} />
+        <Text style={styles.title}>Find Charger</Text>
+        <Icon name="chevron-right" size={16} color={Colors.textSecondary} />
       </View>
 
       <Text style={styles.subtitle}>
-        Quickly locate chargers{'\n'}near you.
+        {chargerCount} stations near you
       </Text>
 
       {/* Charger markers visual */}
       <View style={styles.mapVisual}>
         {[0, 1, 2].map((i) => (
           <View key={i} style={[styles.markerDot, i === 1 && styles.markerDotActive]}>
-            <Icon name="ev-station" size={12} color={i === 1 ? Colors.background : Colors.primary} />
+            <Icon name="ev-station" size={10} color={i === 1 ? Colors.background : Colors.primary} />
           </View>
         ))}
       </View>
@@ -56,8 +62,8 @@ const MapCard: React.FC<MapCardProps> = ({
           end={{ x: 1, y: 0 }}
           style={styles.buttonGradient}
         >
-          <Text style={styles.buttonText}>Find Chargers</Text>
-          <Icon name="chevron-right" size={16} color={Colors.background} />
+          <Text style={styles.buttonText}>Find</Text>
+          <Icon name="chevron-right" size={14} color={Colors.background} />
         </LinearGradient>
       </TouchableOpacity>
     </LinearGradient>
@@ -72,7 +78,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2A2A2A',
     ...Shadows.medium,
-    gap: Spacing.sm,
+    gap: 4,
+    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -80,7 +87,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: Typography.fontSize.md,
+    fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.semibold,
     color: Colors.text,
     flex: 1,
@@ -88,17 +95,16 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: Typography.fontSize.xs,
     color: Colors.textSecondary,
-    lineHeight: 16,
+    lineHeight: 14,
   },
   mapVisual: {
     flexDirection: 'row',
-    gap: Spacing.xs,
-    marginVertical: Spacing.xs,
+    gap: 4,
   },
   markerDot: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     backgroundColor: Colors.primary + '20',
     borderWidth: 1.5,
     borderColor: Colors.primary,
@@ -111,17 +117,18 @@ const styles = StyleSheet.create({
   ctaButton: {
     borderRadius: Radius.md,
     overflow: 'hidden',
+    alignSelf: 'flex-start',
   },
   buttonGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.md,
-    gap: Spacing.xs,
+    paddingVertical: 6,
+    paddingHorizontal: Spacing.sm,
+    gap: 4,
   },
   buttonText: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: Typography.fontSize.xs,
     fontWeight: Typography.fontWeight.semibold,
     color: Colors.background,
   },

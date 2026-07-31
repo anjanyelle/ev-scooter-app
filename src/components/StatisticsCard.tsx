@@ -1,6 +1,13 @@
 /**
  * StatisticsCard Component
  * Horizontal card with icon, label, value, sub-label and chevron arrow
+ * 
+ * SPECIFICATION MATCH:
+ * - No hardcoded width (removed fixed width: 130)
+ * - Uses flex: 1 for equal sizing
+ * - Height: 105dp
+ * - Everything aligned left
+ * - 2 rows, 2 cards each, equal width, gap 12dp
  */
 
 import React from 'react';
@@ -27,7 +34,7 @@ const StatisticsCard: React.FC<StatisticsCardProps> = ({
   onPress,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={styles.touchable}>
       <LinearGradient
         colors={['#1C1C1C', '#141414']}
         start={{ x: 0, y: 0 }}
@@ -42,7 +49,7 @@ const StatisticsCard: React.FC<StatisticsCardProps> = ({
 
         {/* Icon circle */}
         <View style={[styles.iconContainer, { borderColor: color + '50', backgroundColor: color + '15' }]}>
-          <Icon name={icon} size={22} color={color} />
+          <Icon name={icon} size={20} color={color} />
         </View>
 
         {/* Value */}
@@ -58,14 +65,19 @@ const StatisticsCard: React.FC<StatisticsCardProps> = ({
 };
 
 const styles = StyleSheet.create({
+  touchable: {
+    flex: 1,
+  },
   container: {
-    width: 130,
+    flex: 1,
+    height: 105,
     padding: Spacing.md,
     borderRadius: Radius.xl,
     borderWidth: 1,
     borderColor: '#2A2A2A',
     ...Shadows.medium,
     gap: Spacing.xs,
+    justifyContent: 'center',
   },
   topRow: {
     flexDirection: 'row',
@@ -79,19 +91,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconContainer: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     borderRadius: Radius.full,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    marginTop: Spacing.xs,
   },
   value: {
     fontSize: Typography.fontSize.xl,
     fontWeight: Typography.fontWeight.bold,
     color: Colors.text,
-    marginTop: Spacing.xs,
   },
   subValue: {
     fontSize: Typography.fontSize.xs,

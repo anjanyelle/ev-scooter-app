@@ -7,7 +7,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Colors } from '../theme';
-import Dashboard from '../screens/Dashboard';
+import HomeScreen from '../screens/HomeScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createBottomTabNavigator();
@@ -23,7 +23,7 @@ const AppNavigator: React.FC = () => {
       >
         <Tab.Screen
           name="Dashboard"
-          component={Dashboard}
+          component={HomeScreen}
           options={{
             tabBarIcon: ({ color, size }: { color: string; size: number }) => (
               <Icon name="home" size={size} color={color} />
@@ -32,7 +32,7 @@ const AppNavigator: React.FC = () => {
         />
         <Tab.Screen
           name="Rides"
-          component={Dashboard}
+          component={HomeScreen}
           options={{
             tabBarIcon: ({ color, size }: { color: string; size: number }) => (
               <Icon name="motorcycle" size={size} color={color} />
@@ -41,7 +41,7 @@ const AppNavigator: React.FC = () => {
         />
         <Tab.Screen
           name="Center"
-          component={Dashboard}
+          component={HomeScreen}
           options={{
             tabBarIcon: ({ color, size }: { color: string; size: number }) => (
               <Icon name="electric-scooter" size={size} color={color} />
@@ -50,7 +50,7 @@ const AppNavigator: React.FC = () => {
         />
         <Tab.Screen
           name="Service"
-          component={Dashboard}
+          component={HomeScreen}
           options={{
             tabBarIcon: ({ color, size }: { color: string; size: number }) => (
               <Icon name="wrench" size={size} color={color} />
@@ -59,7 +59,7 @@ const AppNavigator: React.FC = () => {
         />
         <Tab.Screen
           name="Profile"
-          component={Dashboard}
+          component={HomeScreen}
           options={{
             tabBarIcon: ({ color, size }: { color: string; size: number }) => (
               <Icon name="account" size={size} color={color} />

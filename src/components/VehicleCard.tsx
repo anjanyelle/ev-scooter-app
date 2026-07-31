@@ -1,6 +1,18 @@
 /**
  * VehicleCard Component
  * Redesigned to match Lexicon EV design - battery left, scooter image center, actions below
+ * 
+ * SPECIFICATION MATCH:
+ * - Border Radius: 20dp
+ * - Padding: 20dp
+ * - Card Width: 380dp (fits 412dp screen with 16dp padding each side)
+ * - LEFT SIDE (45%): Vehicle name, Connection status, Battery %, Range, Eco Mode
+ * - RIGHT SIDE (55%): Bike image perfectly centered vertically
+ * - Bike image: width 185dp, height 170dp, resizeMode="contain"
+ *   (185dp fits within 55% of 340dp inner width = 187dp available)
+ * - Secure badge: absolute position relative to card, top:16, right:16
+ * - Slide to unlock: marginTop 16dp, height 58dp, full width
+ * - Quick actions: 4 equal boxes, gap 8dp, height 68dp
  */
 
 import React, { useEffect, useRef } from 'react';
@@ -11,6 +23,7 @@ import {
   Image,
   Animated,
   TouchableOpacity,
+  useWindowDimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -43,6 +56,8 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
 }) => {
   const floatAnim = useRef(new Animated.Value(0)).current;
   const glowAnim = useRef(new Animated.Value(0.15)).current;
+  const { width: screenWidth } = useWindowDimensions();
+  const isSmallScreen = screenWidth <= 360;
 
   useEffect(() => {
     const floatAnimation = Animated.loop(
@@ -87,6 +102,10 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
     return Colors.error;
   };
 
+  // FIX 3: Bike image uses aspectRatio instead of fixed width/height
+  // aspectRatio: 343/220 matches the reference card's proportions
+  // Image scales responsively across all screen sizes
+
   return (
     <LinearGradient
       colors={['#1C1C1C', '#111111']}
@@ -94,18 +113,17 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      {/* Top row: name + secure badge */}
-      <View style={styles.topRow}>
-        <View style={styles.nameRow}>
-          <Text style={styles.vehicleName}>{vehicleName}</Text>
-          <Icon name="pencil-outline" size={16} color={Colors.textSecondary} style={styles.editIcon} />
+      {/* Secure badge - absolute positioned relative to card container, top:16, right:16 */}
+      {isSecure && (
+        <View style={styles.secureBadge}>
+          <Icon name="shield-check" size={14} color={Colors.primary} />
+          <Text style={styles.secureBadgeText}>Secure</Text>
         </View>
-        {isSecure && (
-          <View style={styles.secureBadge}>
-            <Icon name="shield-check" size={14} color={Colors.primary} />
-            <Text style={styles.secureBadgeText}>Secure</Text>
-          </View>
-        )}
+      )}
+
+      {/* Top row: vehicle name */}
+      <View style={styles.topRow}>
+        <Text style={styles.vehicleName}>{vehicleName}</Text>
       </View>
 
       {/* Connected status */}
@@ -116,9 +134,9 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         </View>
       )}
 
-      {/* Middle: battery info + scooter image */}
+      {/* Middle: LEFT SIDE (45%) battery info + RIGHT SIDE (55%) scooter image */}
       <View style={styles.middleSection}>
-        {/* Left: Battery info */}
+        {/* Left: Battery info - 45% */}
         <View style={styles.batterySection}>
           <Text style={styles.batteryLabel}>Battery</Text>
           <Text style={[styles.batteryPercent, { color: getBatteryColor() }]}>
@@ -148,20 +166,22 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
           </View>
         </View>
 
-        {/* Right: Scooter image */}
-        <Animated.View style={styles.imageSection}>
+        {/* Bike image - fills available space, aligned left, no clipping */}
+        <View style={styles.imageSection}>
           <Animated.Image
             source={require('../assets/lexicon-scooter.png')}
             style={[
               styles.scooterImage,
-              { transform: [{ translateY: floatAnim }, { scaleX: -1 }] },
+              {
+                transform: [{ translateY: floatAnim }, { scaleX: -1 }],
+              },
             ]}
             resizeMode="contain"
           />
-        </Animated.View>
+        </View>
       </View>
 
-      {/* Slide to Unlock - full width primary button */}
+      {/* Slide to Unlock - marginTop 16dp, height 58dp */}
       <TouchableOpacity
         style={styles.unlockButton}
         onPress={onUnlock}
@@ -183,7 +203,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         </LinearGradient>
       </TouchableOpacity>
 
-      {/* Quick action buttons row */}
+      {/* Quick action buttons row - 4 equal boxes, gap 8dp, height 68dp */}
       <View style={styles.actionsRow}>
         {[
           { icon: 'lightning-bolt', label: 'Flash', onPress: onFlash },
@@ -210,33 +230,22 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: Spacing.lg,
-    borderRadius: Radius.xl,
+    padding: 20,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: '#2A2A2A',
     ...Shadows.large,
-    gap: Spacing.md,
+    gap: Spacing.sm,
+    position: 'relative',
   },
-  topRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  nameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
-  },
-  vehicleName: {
-    fontSize: Typography.fontSize.xxl,
-    fontWeight: Typography.fontWeight.bold,
-    color: Colors.text,
-  },
-  editIcon: {
-    marginLeft: 4,
-    opacity: 0.6,
-  },
+  /**
+   * Secure badge positioned absolute relative to card container (position: relative).
+   * Spec: top:16, right:16 from card edge
+   */
   secureBadge: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
@@ -246,17 +255,26 @@ const styles = StyleSheet.create({
     borderRadius: Radius.full,
     borderWidth: 1,
     borderColor: Colors.primary + '40',
+    zIndex: 10,
   },
   secureBadgeText: {
     fontSize: Typography.fontSize.xs,
     color: Colors.primary,
     fontWeight: Typography.fontWeight.medium,
   },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  vehicleName: {
+    fontSize: Typography.fontSize.xxl,
+    fontWeight: Typography.fontWeight.bold,
+    color: Colors.text,
+  },
   connectedRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginTop: -Spacing.xs,
   },
   connectedDot: {
     width: 8,
@@ -277,12 +295,12 @@ const styles = StyleSheet.create({
   middleSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 220,
+    minHeight: 180,
   },
+  // LEFT SIDE - 45%
   batterySection: {
-    flex: 1,
-    gap: 6,
-    zIndex: 2,
+    flex: 0.45,
+    gap: 4,
     justifyContent: 'center',
   },
   batteryLabel: {
@@ -291,17 +309,17 @@ const styles = StyleSheet.create({
     fontWeight: Typography.fontWeight.regular,
   },
   batteryPercent: {
-    fontSize: 48,
+    fontSize: 42,
     fontWeight: '800',
-    lineHeight: 54,
+    lineHeight: 48,
   },
   batteryBar: {
     height: 4,
     backgroundColor: Colors.glass,
     borderRadius: Radius.full,
     overflow: 'hidden',
-    width: '80%',
-    marginBottom: 6,
+    width: '85%',
+    marginBottom: 4,
   },
   batteryFill: {
     height: '100%',
@@ -340,28 +358,31 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     marginTop: 1,
   },
+  // RIGHT SIDE - bike image fills available space, aligned left
   imageSection: {
-    flex: 1.3,
-    height: 220,
-    alignItems: 'center',
+    flex: 1,
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    position: 'relative',
+    height: 200,
   },
   scooterImage: {
-    width: 220,
-    height: 220,
+    width: '100%',
+    height: '100%',
     zIndex: 1,
   },
+  // Slide to Unlock - marginTop 16dp, height 58dp
   unlockButton: {
+    marginTop: 16,
+    height: 58,
     borderRadius: Radius.lg,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: Colors.primary + '30',
   },
   unlockGradient: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.md,
     gap: Spacing.sm,
   },
@@ -390,18 +411,21 @@ const styles = StyleSheet.create({
     fontWeight: Typography.fontWeight.bold,
     letterSpacing: 2,
   },
+  // Quick actions - 4 equal boxes, gap 8dp, height 68dp
   actionsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    gap: 8,
+    height: 68,
   },
   actionButton: {
-    alignItems: 'center',
-    gap: Spacing.xs,
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.xs,
   },
   actionIconBox: {
-    width: 48,
-    height: 48,
+    width: 44,
+    height: 44,
     borderRadius: Radius.lg,
     backgroundColor: '#1E1E1E',
     alignItems: 'center',

@@ -1,6 +1,12 @@
 /**
  * GreetingCard Component
  * Displays personalized greeting matching the reference design
+ * 
+ * SPECIFICATION MATCH:
+ * - Height: 90dp
+ * - Border Radius: 16dp
+ * - Content vertically centered
+ * - No fixed widths, uses flex
  */
 
 import React from 'react';
@@ -46,12 +52,14 @@ const GreetingCard: React.FC<GreetingCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: Spacing.lg,
-    borderRadius: Radius.xl,
+    flex: 1,
+    padding: Spacing.md,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: '#2A2A2A',
     ...Shadows.medium,
     gap: 3,
+    justifyContent: 'center',
   },
   greeting: {
     fontSize: Typography.fontSize.sm,
