@@ -1,0 +1,111 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'com.facebook.react'
+
+react {
+    autolinkLibrariesWithApp()
+}
+
+def env = [:]
+def envFile = rootProject.file('../.env')
+if (envFile.exists()) {
+    envFile.eachLine { rawLine ->
+        def line = rawLine.trim()
+        if (line && !line.startsWith('#') && line.contains('=')) {
+            def separator = line.indexOf('=')
+            def key = line.substring(0, separator).trim()
+            def value = line.substring(separator + 1).trim().replaceAll(/^['\"]|['\"]$/, '')
+            env[key] = value
+        }
+    }
+}
+def valueFor = { String key, String fallback = '' ->
+    System.getenv(key) ?: env.get(key, fallback)
+}
+def repositoryMode = valueFor('LEXICON_REPOSITORY_MODE', 'mock') == 'http' ? 'http' : 'mock'
+def apiBaseUrl = valueFor('LEXICON_API_BASE_URL', '')
+def buildEnvironment = valueFor('LEXICON_BUILD_ENV', 'development')
+def allowLocalCleartext = buildEnvironment != 'production' && apiBaseUrl ==~ /(?i)^http:\/\/(localhost|127\.0\.0\.1|10\.0\.2\.2)(:\d+)?(\/.*)?$/
+
+if (repositoryMode == 'http' && !apiBaseUrl) {
+    throw new GradleException('LEXICON_API_BASE_URL is required when LEXICON_REPOSITORY_MODE=http.')
+}
+if (buildEnvironment == 'production' && apiBaseUrl && !apiBaseUrl.startsWith('https://')) {
+    throw new GradleException('Production builds require an HTTPS LEXICON_API_BASE_URL.')
+}
+
+def enableProguardInReleaseBuilds = true
+def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
+
+android {
+    ndkVersion rootProject.ext.ndkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdk rootProject.ext.compileSdkVersion
+    namespace 'com.lexicon.mobility'
+
+    defaultConfig {
+        applicationId 'com.lexicon.mobility'
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 2
+        versionName '1.1.0'
+        manifestPlaceholders = [
+            usesCleartextTraffic: 'false',
+            googleMapsApiKey: valueFor('LEXICON_GOOGLE_MAPS_API_KEY', '')
+        ]
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            manifestPlaceholders = [usesCleartextTraffic: allowLocalCleartext.toString()]
+        }
+        release {
+            minifyEnabled enableProguardInReleaseBuilds
+            shrinkResources enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+def generateRuntimeConfig = tasks.register('generateRuntimeConfig', Exec) {
+    workingDir rootProject.file('..')
+    // Use `cmd /c node` on Windows so that node is found via the system PATH
+    // even when Gradle is launched from Android Studio (which may not inherit
+    // the full shell PATH on Windows).
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+        commandLine 'cmd', '/c', 'node', 'scripts/generate-runtime-config.mjs'
+    } else {
+        commandLine 'node', 'scripts/generate-runtime-config.mjs'
+    }
+}
+tasks.named('preBuild').configure { dependsOn(generateRuntimeConfig) }
+tasks.matching { it.name == 'preReleaseBuild' }.configureEach {
+    doFirst {
+        if (repositoryMode == 'http' && !apiBaseUrl.startsWith('https://')) {
+            throw new GradleException('Release builds require an HTTPS LEXICON_API_BASE_URL.')
+        }
+    }
+}
+
+dependencies {
+    implementation('com.facebook.react:react-android')
+    implementation('androidx.core:core-splashscreen:1.0.1')
+    implementation("androidx.appcompat:appcompat:1.7.1")
+implementation("com.google.android.material:material:1.12.0")
+
+    if (hermesEnabled.toBoolean()) {
+        implementation('com.facebook.react:hermes-android')
+    } else {
+        implementation jscFlavor
+    }
+}
