@@ -1,7 +1,6 @@
 import {
   BatteryCharging,
   CalendarClock,
-  ChevronDown,
   ChevronRight,
   CircleDollarSign,
   Clock3,
@@ -18,12 +17,12 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { CircularProgress } from '@/components/charts';
-import { AppButton, ErrorState, Chip, GlassCard, Screen, ScreenHeader, SectionHeader, Skeleton, StatusPill } from '@/components/ui';
+import { AppButton, ErrorState, GlassCard, Screen, ScreenHeader, SectionHeader, Skeleton, StatusPill } from '@/components/ui';
 import { useToast } from '@/context/ToastContext';
 import { evRepository } from '@/data/repository';
 import { useAsyncResource } from '@/hooks/useAsyncResource';
 import { colors, fonts, radii, spacing } from '@/theme';
-import { formatCurrency, formatDuration, formatNumber, formatRideDate } from '@/utils/format';
+import { formatCurrency, formatDuration, formatRideDate } from '@/utils/format';
 import { haptic } from '@/utils/haptics';
 
 export default function ChargingScreen() {
@@ -94,8 +93,20 @@ export default function ChargingScreen() {
             <View style={styles.homeIcon}><HousePlug size={18} color={colors.primary} /></View>
             <View><Text style={styles.homeTitle}>{charging ? 'Charging at Home' : 'Charging paused'}</Text><Text style={styles.homeSubtitle}>{data.homeChargerName} · {charging ? `${data.powerKw} kW` : 'Connected'}</Text></View>
           </View>
-          <AppButton label={charging ? 'Stop Charging' : 'Stopped'} icon={SquareStop} variant="secondary" compact fullWidth={false} loading={stopping} disabled={!charging} onPress={stopCharging} />
-        </View>
+<AppButton
+  label={charging ? 'Stop' : 'Stopped'}
+  icon={SquareStop}
+  variant="secondary"
+  compact
+  fullWidth={false}
+  style={{
+    width: 145,
+  }}
+  loading={stopping}
+  disabled={!charging}
+  onPress={stopCharging}
+/>
+ </View>
       </GlassCard>
 
       <GlassCard>

@@ -13,7 +13,10 @@ export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
   Otp: undefined;
+  ForgotPassword: undefined; // NEW
+
   MainTabs: NavigatorScreenParams<MainTabParamList> | undefined;
+
   Viewer: undefined;
   Tracking: undefined;
   Notifications: undefined;
@@ -24,6 +27,7 @@ export type AppHref =
   | '/(auth)/login'
   | '/(auth)/signup'
   | '/(auth)/otp'
+  | '/(auth)/forgot-password' // NEW
   | '/(tabs)/home'
   | '/(tabs)/rides'
   | '/(tabs)/charging'

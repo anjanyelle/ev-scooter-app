@@ -12,3 +12,4 @@ export * from './Skeleton';
 export * from './StatusPill';
 export * from './ToggleRow';
 export * from './ErrorState';
+export * from './ConfirmModal';

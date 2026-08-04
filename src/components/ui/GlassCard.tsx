@@ -16,7 +16,6 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export function GlassCard({ children, style, onPress, padding = spacing.md }: GlassCardProps) {
   const scale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
-
   if (!onPress) {
     return <View style={[styles.card, { padding }, style]}>{children}</View>;
   }

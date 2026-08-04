@@ -3,6 +3,9 @@ apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'com.facebook.react'
 
 react {
+    // Keep the Android Studio debug APK runnable even when Metro is not running
+    // or cannot be reached from an emulator. The app uses the bundled asset below.
+    debuggableVariants = []
     autolinkLibrariesWithApp()
 }
 

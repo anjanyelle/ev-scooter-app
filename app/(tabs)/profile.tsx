@@ -3,7 +3,6 @@ import {
   BellRing,
   Bluetooth,
   ChevronRight,
-  CircleUserRound,
   FileText,
   Fingerprint,
   Headphones,
@@ -18,11 +17,9 @@ import {
 import type { LucideIcon } from 'lucide-react-native';
 import { useRouter } from '@/navigation/router';
 import { useState } from 'react';
-import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Linking, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import {
-  AppButton,
-  BottomSheet,
   Chip,
   ErrorState,
   GlassCard,
@@ -39,7 +36,7 @@ import { useToast } from '@/context/ToastContext';
 import { evRepository } from '@/data/repository';
 import { requestNotificationPermission } from '@/services/notifications';
 import { useAsyncResource } from '@/hooks/useAsyncResource';
-import { colors, fonts, spacing } from '@/theme';
+import { colors, fonts, shadows, spacing } from '@/theme';
 import type { UserPreferences } from '@/types/domain';
 import { formatNumber } from '@/utils/format';
 
@@ -55,12 +52,14 @@ export default function ProfileScreen() {
   const { preferences, updatePreference } = usePreferences();
   const { showToast } = useToast();
   const resource = useAsyncResource(() => evRepository.getDashboard(), []);
-  const [logoutSheet, setLogoutSheet] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
-  const handleLogout = async () => {
-    setLogoutSheet(false);
-    await logout();
-    router.replace('/(auth)/login');
+  const performLogoutAndRedirect = () => {
+    setShowLogoutDialog(false);
+    // With conditional rendering in AppNavigator, calling logout() sets
+    // status to 'unauthenticated' which automatically unmounts MainTabs
+    // and mounts the Login screen group. No explicit navigation needed.
+    void logout().catch(() => undefined);
   };
 
   if (resource.loading) {
@@ -177,16 +176,56 @@ export default function ProfileScreen() {
           <MenuRow icon={BadgeHelp} title="App diagnostics" subtitle={`Version 1.1.0 · ${runtimeConfig.repositoryMode.toUpperCase()} · ${runtimeConfig.buildEnvironment}`} onPress={() => showToast('App diagnostics are healthy.', 'success')} />
         </GlassCard>
 
-        <AppButton label="Log out" icon={LogOut} variant="danger" onPress={() => setLogoutSheet(true)} />
+        <TouchableOpacity
+          style={styles.logoutBtn}
+          activeOpacity={0.7}
+          onPress={() => setShowLogoutDialog(true)}
+        >
+          <LogOut size={18} color={colors.error} strokeWidth={2.4} />
+          <Text style={styles.logoutBtnText}>Log out</Text>
+        </TouchableOpacity>
         <Text style={styles.footer}>LEXICON companion · React Native + TypeScript · Android</Text>
       </Screen>
 
-      <BottomSheet visible={logoutSheet} onClose={() => setLogoutSheet(false)} title="Log out of LEXICON?" subtitle="Your local session will be removed from this device.">
-        <View style={styles.sheetButtons}>
-          <AppButton label="Stay signed in" variant="outline" onPress={() => setLogoutSheet(false)} />
-          <AppButton label="Log out" variant="danger" icon={LogOut} onPress={handleLogout} />
-        </View>
-      </BottomSheet>
+      <Modal
+        visible={showLogoutDialog}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowLogoutDialog(false)}
+        statusBarTranslucent
+      >
+        <TouchableOpacity
+          style={styles.logoutModalBg}
+          activeOpacity={1}
+          onPress={() => setShowLogoutDialog(false)}
+        >
+          <TouchableOpacity activeOpacity={1} style={styles.logoutModalCard}>
+            <View style={styles.logoutModalHeader}>
+              <LogOut size={28} color="#ef4444" />
+              <Text style={styles.logoutModalTitle}>Confirm Logout</Text>
+            </View>
+            <Text style={styles.logoutModalText}>
+              Are you sure you want to log out? You will be signed out of your LEXICON EV Companion account and returned to the login screen.
+            </Text>
+            <View style={styles.logoutModalButtons}>
+              <TouchableOpacity
+                style={styles.logoutCancelBtn}
+                activeOpacity={0.7}
+                onPress={() => setShowLogoutDialog(false)}
+              >
+                <Text style={styles.logoutCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.logoutConfirmBtn}
+                activeOpacity={0.7}
+                onPress={performLogoutAndRedirect}
+              >
+                <Text style={styles.logoutConfirmText}>Yes, Log out</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </>
   );
 }
@@ -232,5 +271,45 @@ const styles = StyleSheet.create({
   menuRow: { minHeight: 70, flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingHorizontal: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.divider },
   menuIcon: { width: 40, height: 40, borderRadius: 14, backgroundColor: `${colors.primary}10`, alignItems: 'center', justifyContent: 'center' },
   sheetButtons: { gap: spacing.sm },
-  footer: { color: colors.muted, fontFamily: fonts.regular, fontSize: 9, textAlign: 'center' }
+  footer: { color: colors.muted, fontFamily: fonts.regular, fontSize: 9, textAlign: 'center' },
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.xs,
+    minHeight: 54,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: `${colors.error}66`,
+    backgroundColor: `${colors.error}10`,
+    width: '100%',
+  },
+  logoutBtnText: { color: colors.error, fontFamily: fonts.semibold, fontSize: 15 },
+  logoutModalBg: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.88)', alignItems: 'center', justifyContent: 'center', padding: spacing.lg },
+  logoutModalCard: { width: '100%', maxWidth: 360, borderRadius: 24, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.glassBorder, padding: spacing.xl, gap: spacing.lg, ...shadows.card },
+  logoutModalHeader: { alignItems: 'center', gap: spacing.sm },
+  logoutModalTitle: { color: colors.heading, fontFamily: fonts.bold, fontSize: 22, textAlign: 'center' },
+  logoutModalText: { color: colors.secondary, fontFamily: fonts.regular, fontSize: 13, textAlign: 'center', lineHeight: 20 },
+  logoutModalButtons: { flexDirection: 'row', gap: spacing.md },
+  logoutCancelBtn: {
+    flex: 1,
+    minHeight: 48,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#404040',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoutCancelText: { color: colors.heading, fontFamily: fonts.semibold, fontSize: 14 },
+  logoutConfirmBtn: {
+    flex: 1,
+    minHeight: 48,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: `${colors.error}66`,
+    backgroundColor: `${colors.error}18`,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoutConfirmText: { color: colors.error, fontFamily: fonts.semibold, fontSize: 14 },
 });

@@ -53,11 +53,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={value}>
       {children}
       {toast ? (
-        <Animated.View
-          entering={FadeInDown.duration(240)}
-          exiting={FadeOutUp.duration(180)}
-          style={[styles.toast, { top: insets.top + spacing.sm }]}
-        >
+        <Animated.View entering={FadeInDown.duration(240)} exiting={FadeOutUp.duration(180)} style={[styles.toast, { top: insets.top + spacing.sm }]}>
           <View style={[styles.icon, { backgroundColor: `${colorMap[toast.kind]}18` }]}>
             <Icon size={19} color={colorMap[toast.kind]} strokeWidth={2.4} />
           </View>

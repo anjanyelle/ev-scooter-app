@@ -45,5 +45,9 @@ export async function setStoredSession(session: AuthSession): Promise<void> {
 }
 
 export async function clearStoredSession(): Promise<void> {
-  await Keychain.resetGenericPassword({ service: SESSION_KEY });
+  try {
+    await Keychain.resetGenericPassword({ service: SESSION_KEY });
+  } catch {
+    // Silently ignore Keychain exceptions on emulators without Keystore configured
+  }
 }

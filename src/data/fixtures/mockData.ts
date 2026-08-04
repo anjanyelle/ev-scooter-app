@@ -20,7 +20,7 @@ export const dashboardFixture: DashboardPayload = {
   vehicle: {
     vin: 'LEX26HYD8M0042187',
     model: 'LEXICON One S',
-    nickname: 'Lexi',
+    nickname: 'LEXICON',
     registrationNumber: 'TS 09 EV 2048',
     firmwareVersion: 'LEX OS 4.8.2',
     batteryPercentage: 82,

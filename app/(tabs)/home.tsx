@@ -3,14 +3,15 @@ import {
   Bell,
   CarFront,
   ChevronRight,
-  
   HeartPulse,
-
+  Lightbulb,
   LocateFixed,
- 
+  Lock,
+  MapPin,
   Sparkles,
   ThermometerSun,
-  
+  Unlock,
+  Volume2,
   Zap
 } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
@@ -41,7 +42,7 @@ import { haptic } from '@/utils/haptics';
 const healthIcons = [
   BatteryCharging,
   Zap,
- HeartPulse,
+  HeartPulse,
   Bell,
 ];
 export default function HomeScreen() {
@@ -114,14 +115,25 @@ export default function HomeScreen() {
 
       <Animated.View entering={FadeInDown.duration(420)}>
         <GlassCard padding={0} style={styles.viewerCard}>
-          <View style={styles.vehicleTopline}>
-            <View>
-              <Text style={styles.vehicleName}>{vehicle.nickname}</Text>
-              <Text style={styles.vehicleModel}>{vehicle.model} · {vehicle.registrationNumber}</Text>
-            </View>
-            <StatusPill label={vehicle.status === 'parked' ? 'Parked securely' : vehicle.status} color={colors.success} />
-          </View>
-          <Scooter3DViewer compact />
+          <Scooter3DViewer
+            compact
+            header={
+              <View style={styles.vehicleTopline}>
+                <View style={styles.vehicleInfo}>
+                  <Text style={styles.vehicleName} numberOfLines={1}>
+                    {vehicle.nickname}
+                  </Text>
+                  <Text style={styles.vehicleModel} numberOfLines={1}>
+                    {vehicle.model} · {vehicle.registrationNumber}
+                  </Text>
+                </View>
+                <StatusPill
+                  label={vehicle.status === 'parked' ? 'Secured' : vehicle.status}
+                  color={colors.success}
+                />
+              </View>
+            }
+          />
           <Pressable style={styles.viewerCta} onPress={() => router.push('/viewer')}>
             <Sparkles size={16} color={colors.primary} />
             <Text style={styles.viewerCtaText}>Open photoreal vehicle studio</Text>
@@ -132,19 +144,19 @@ export default function HomeScreen() {
 
       <View style={styles.metricRow}>
         <GlassCard style={styles.batteryCard}>
-          <CircularProgress value={vehicle.batteryPercentage} size={128} strokeWidth={9} label="Battery level" gradientId="homeBattery" />
+          <CircularProgress value={vehicle.batteryPercentage} size={124} strokeWidth={9} label="Battery level" gradientId="homeBattery" />
           <View style={styles.metricFooter}>
             <Text style={styles.metricLabel}>Battery health</Text>
             <Text style={styles.metricValue}>{vehicle.batteryHealth}%</Text>
           </View>
         </GlassCard>
         <GlassCard style={styles.rangeCard}>
-          <View style={styles.rangeIcon}><LocateFixed size={25} color={colors.primary} /></View>
+          <View style={styles.rangeIcon}><LocateFixed size={23} color={colors.primary} /></View>
           <Text style={styles.rangeValue}>{formatNumber(vehicle.range, 0)}<Text style={styles.rangeUnit}> km</Text></Text>
           <Text style={styles.metricLabel}>Dynamic range</Text>
           <View style={styles.divider} />
-          <View style={styles.inlineMetric}><ThermometerSun size={15} color={colors.warning} /><Text style={styles.inlineMetricText}>{vehicle.temperature}°C battery</Text></View>
-          <View style={styles.inlineMetric}><Bell size={15} color={colors.info} /><Text style={styles.inlineMetricText}>Thermal state nominal</Text></View>
+          <View style={styles.inlineMetric}><ThermometerSun size={14} color={colors.warning} /><Text style={styles.inlineMetricText}>{vehicle.temperature}°C battery</Text></View>
+          <View style={styles.inlineMetric}><Bell size={14} color={colors.info} /><Text style={styles.inlineMetricText}>Thermal state nominal</Text></View>
         </GlassCard>
       </View>
 
@@ -160,31 +172,31 @@ export default function HomeScreen() {
       <SectionHeader title="Quick actions" subtitle="Secure commands through the connected vehicle service" />
       <View style={styles.actionGrid}>
         <QuickAction
-  icon={Zap}
-  label={locked ? "Unlock" : "Lock"}
-  loading={commanding === (locked ? "unlock" : "lock")}
-  onPress={() => void command(locked ? "unlock" : "lock")}
-/>
+          icon={locked ? Unlock : Lock}
+          label={locked ? "Unlock" : "Lock"}
+          loading={commanding === (locked ? "unlock" : "lock")}
+          onPress={() => void command(locked ? "unlock" : "lock")}
+        />
 
-<QuickAction
-  icon={Zap}
-  label="Flash lights"
-  loading={commanding === "lights"}
-  onPress={() => void command("lights")}
-/>
+        <QuickAction
+          icon={Lightbulb}
+          label="Flash lights"
+          loading={commanding === "lights"}
+          onPress={() => void command("lights")}
+        />
 
-<QuickAction
-  icon={Bell}
-  label="Sound horn"
-  loading={commanding === "horn"}
-  onPress={() => void command("horn")}
-/>
+        <QuickAction
+          icon={Volume2}
+          label="Sound horn"
+          loading={commanding === "horn"}
+          onPress={() => void command("horn")}
+        />
 
-<QuickAction
-  icon={LocateFixed}
-  label="Live tracking"
-  onPress={() => router.push("/tracking")}
-/>
+        <QuickAction
+          icon={MapPin}
+          label="Live tracking"
+          onPress={() => router.push("/tracking")}
+        />
       </View>
 
       <GlassCard>
@@ -236,11 +248,28 @@ const styles = StyleSheet.create({
   greeting: { color: colors.heading, fontFamily: fonts.bold, fontSize: 21, letterSpacing: -0.25 },
   headerButton: { width: 44, height: 44, borderRadius: 15, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
   unreadDot: { position: 'absolute', width: 8, height: 8, borderRadius: 4, backgroundColor: colors.primary, top: 8, right: 8, borderWidth: 2, borderColor: colors.surface },
-  viewerCard: { paddingBottom: spacing.sm },
-  vehicleTopline: { position: 'absolute', top: spacing.md, left: spacing.md, right: spacing.md, zIndex: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
-  vehicleName: { color: colors.heading, fontFamily: fonts.bold, fontSize: 18 },
+  viewerCard: { padding: spacing.sm, paddingBottom: spacing.sm },
+  vehicleTopline: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+    paddingTop: 16,
+    paddingHorizontal: 18,
+    zIndex: 4,
+  },
+  vehicleInfo: {
+    flex: 1,
+    marginRight: 8,
+  },
+  vehicleName: {
+    color: colors.heading,
+    fontFamily: fonts.bold,
+    fontSize: 22,
+    flexShrink: 1,
+  },
   vehicleModel: { color: colors.secondary, fontFamily: fonts.regular, fontSize: 10, marginTop: 2 },
-  viewerCta: { minHeight: 44, marginHorizontal: spacing.sm, marginTop: spacing.xs, borderRadius: radii.button, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.xs },
+  viewerCta: { minHeight: 44, marginTop: spacing.sm, borderRadius: radii.button, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.xs },
   viewerCtaText: { color: colors.heading, fontFamily: fonts.medium, fontSize: 12 },
   metricRow: { flexDirection: 'row', gap: spacing.sm },
   batteryCard: { flex: 1, alignItems: 'center', gap: spacing.sm, paddingHorizontal: spacing.sm },

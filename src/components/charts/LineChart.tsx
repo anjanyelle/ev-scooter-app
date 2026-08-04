@@ -29,7 +29,7 @@ export function LineChart({ data, height = 190 }: LineChartProps) {
       ? `${path} L ${points[points.length - 1]?.x ?? pad.left} ${pad.top + chartHeight} L ${points[0]?.x ?? pad.left} ${pad.top + chartHeight} Z`
       : '';
     return { points, path, area, min, max };
-  }, [chartHeight, chartWidth, data]);
+  }, [chartHeight, chartWidth, data, pad.left, pad.top]);
 
   return (
     <View style={[styles.root, { height }]}>

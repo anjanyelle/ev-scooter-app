@@ -1,28 +1,13 @@
 import LinearGradient from '@/components/system/LinearGradient';
 import { Lightbulb, RotateCcw, ScanLine } from 'lucide-react-native';
-import { memo, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
-  Easing,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming
-} from 'react-native-reanimated';
+import { memo, useState } from 'react';
+import type { ReactNode } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, fonts, radii, shadows, spacing } from '@/theme';
+import { colors, fonts, radii, shadows } from '@/theme';
 import { haptic } from '@/utils/haptics';
 
-const scooterSource = require('../../../assets/lexicon-scooter-reference.jpg');
-
-const spring = {
-  damping: 19,
-  stiffness: 170,
-  mass: 0.75
-} as const;
-
+const scooterSource = require('../../../assets/scooter.png');
 interface HotspotProps {
   left: `${number}%`;
   top: `${number}%`;
@@ -48,92 +33,19 @@ const Hotspot = memo(function Hotspot({ left, top, label, compact }: HotspotProp
  * so the scooter keeps its real-world proportions and material detail on Android.
  * A CAD/GLB asset can be dropped into the same shell later for true multi-angle orbit.
  */
-export function Scooter3DViewer({ compact = false }: { compact?: boolean }) {
+export function Scooter3DViewer({ compact = false, header }: { compact?: boolean; header?: ReactNode }) {
   const [lightsOn, setLightsOn] = useState(true);
-
-  const tiltX = useSharedValue(0);
-  const tiltY = useSharedValue(0);
-  const offsetX = useSharedValue(0);
-  const offsetY = useSharedValue(0);
-  const scale = useSharedValue(compact ? 1.04 : 1.02);
-  const savedScale = useSharedValue(scale.value);
-  const lightLevel = useSharedValue(1);
-
-  const gestures = useMemo(() => {
-    const pan = Gesture.Pan()
-      .minDistance(2)
-      .onUpdate((event) => {
-        const horizontalLimit = compact ? 18 : 26;
-        const verticalLimit = compact ? 10 : 16;
-        offsetX.value = Math.max(-horizontalLimit, Math.min(horizontalLimit, event.translationX * 0.28));
-        offsetY.value = Math.max(-verticalLimit, Math.min(verticalLimit, event.translationY * 0.2));
-        tiltY.value = Math.max(-8, Math.min(8, event.translationX * 0.045));
-        tiltX.value = Math.max(-4.5, Math.min(4.5, -event.translationY * 0.03));
-      })
-      .onEnd(() => {
-        offsetX.value = withSpring(0, spring);
-        offsetY.value = withSpring(0, spring);
-        tiltX.value = withSpring(0, spring);
-        tiltY.value = withSpring(0, spring);
-      });
-
-    const pinch = Gesture.Pinch()
-      .onBegin(() => {
-        savedScale.value = scale.value;
-      })
-      .onUpdate((event) => {
-        const minimum = compact ? 1.02 : 1;
-        const maximum = compact ? 1.18 : 1.42;
-        scale.value = Math.max(minimum, Math.min(maximum, savedScale.value * event.scale));
-      })
-      .onEnd(() => {
-        const restingScale = compact ? 1.04 : 1.02;
-        if (scale.value < restingScale + 0.025) {
-          scale.value = withSpring(restingScale, spring);
-        }
-      });
-
-    return Gesture.Simultaneous(pan, pinch);
-  }, [compact, offsetX, offsetY, savedScale, scale, tiltX, tiltY]);
-
-  const sceneStyle = useAnimatedStyle(() => ({
-    transform: [
-      { perspective: 1100 },
-      { translateX: offsetX.value },
-      { translateY: offsetY.value },
-      { rotateX: `${tiltX.value}deg` },
-      { rotateY: `${tiltY.value}deg` },
-      { scale: scale.value }
-    ]
-  }));
-
-  const lightStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(lightLevel.value, [0, 1], [0.05, 0.92]),
-    transform: [{ scale: interpolate(lightLevel.value, [0, 1], [0.85, 1.1]) }]
-  }));
 
   const toggleLights = () => {
     const next = !lightsOn;
     setLightsOn(next);
-    lightLevel.value = withTiming(next ? 1 : 0, {
-      duration: 320,
-      easing: Easing.out(Easing.cubic)
-    });
     void haptic.select();
   };
 
-  const reset = () => {
-    tiltX.value = withSpring(0, spring);
-    tiltY.value = withSpring(0, spring);
-    offsetX.value = withSpring(0, spring);
-    offsetY.value = withSpring(0, spring);
-    scale.value = withSpring(compact ? 1.04 : 1.02, spring);
-    void haptic.select();
-  };
+  const reset = () => void haptic.select();
 
   return (
-    <GestureDetector gesture={gestures}>
-      <View
+    <View
         style={[styles.root, compact ? styles.compact : styles.full]}
         accessibilityLabel="Interactive photoreal LEXICON scooter viewer"
       >
@@ -144,35 +56,33 @@ export function Scooter3DViewer({ compact = false }: { compact?: boolean }) {
         />
         <View style={styles.topGlow} pointerEvents="none" />
         <View style={styles.floorGlow} pointerEvents="none" />
+        {header ? <View style={styles.headerWrapper}>{header}</View> : null}
 
-        <Animated.View style={[styles.scene, sceneStyle]} pointerEvents="none">
-          <Animated.Image
+        <View style={styles.scene} pointerEvents="none">
+          <Image
             source={scooterSource}
             resizeMode="contain"
             fadeDuration={0}
             style={[styles.scooterImage, compact ? styles.scooterImageCompact : null]}
             accessibilityIgnoresInvertColors
           />
-          <Animated.View style={[styles.headlightBloom, lightStyle]} />
-          <Hotspot left="67%" top="44%" label="LED projector" compact={compact} />
-          <Hotspot left="47%" top="62%" label="Battery pack" compact={compact} />
-          <Hotspot left="28%" top="72%" label="Electric drive" compact={compact} />
-        </Animated.View>
-
-        <LinearGradient
-          colors={['rgba(0,0,0,0.48)', 'transparent', 'rgba(0,0,0,0.62)']}
-          locations={[0, 0.42, 1]}
-          pointerEvents="none"
-          style={StyleSheet.absoluteFill}
-        />
-
-        <View style={styles.qualityBadge} pointerEvents="none">
-          <ScanLine size={12} color={colors.primary} />
-          <Text style={styles.qualityText}>PHOTO-REAL VEHICLE STUDIO</Text>
+          {!compact && lightsOn ? <View style={styles.headlightBloom} /> : null}
+          {!compact ? <Hotspot left="67%" top="44%" label="LED projector" compact={compact} /> : null}
+          {!compact ? <Hotspot left="47%" top="62%" label="Battery pack" compact={compact} /> : null}
+          {!compact ? <Hotspot left="28%" top="72%" label="Electric drive" compact={compact} /> : null}
         </View>
 
-        <View style={styles.controlStack}>
-          {!compact ? (
+        {/* Clear ambient backdrop for maximum scooter visibility */}
+
+        {!compact ? (
+          <View style={styles.qualityBadge} pointerEvents="none">
+            <ScanLine size={12} color={colors.primary} />
+            <Text style={styles.qualityText}>PHOTO-REAL VEHICLE STUDIO</Text>
+          </View>
+        ) : null}
+
+        {!compact ? (
+          <View style={styles.controlStack}>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={lightsOn ? 'Turn studio lighting off' : 'Turn studio lighting on'}
@@ -181,18 +91,17 @@ export function Scooter3DViewer({ compact = false }: { compact?: boolean }) {
             >
               <Lightbulb size={16} color={lightsOn ? colors.background : colors.heading} />
             </Pressable>
-          ) : null}
-          <Pressable accessibilityRole="button" accessibilityLabel="Reset vehicle view" style={styles.control} onPress={reset}>
-            <RotateCcw size={16} color={colors.heading} />
-          </Pressable>
-        </View>
+            <Pressable accessibilityRole="button" accessibilityLabel="Reset vehicle view" style={styles.control} onPress={reset}>
+              <RotateCcw size={16} color={colors.heading} />
+            </Pressable>
+          </View>
+        ) : null}
 
         <View style={styles.instructions} pointerEvents="none">
           <Text style={styles.instructionTitle}>Real-world product view</Text>
           <Text style={styles.instructionText}>{compact ? 'Drag to inspect' : 'Drag to tilt · Pinch to zoom · Tap bulb for studio light'}</Text>
         </View>
       </View>
-    </GestureDetector>
   );
 }
 
@@ -207,19 +116,34 @@ const styles = StyleSheet.create({
     ...shadows.card
   },
   full: { height: 470 },
-  compact: { height: 292 },
+  compact: { height: 320 },
+  headerWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+  },
   scene: {
     position: 'absolute',
-    left: '-6%',
-    right: '-6%',
-    top: '-4%',
-    bottom: '-3%',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  scooterImage: { width: '100%', height: '100%' },
-  scooterImageCompact: { width: '112%', height: '112%' },
+  scooterImage: {
+    width: '92%',
+    height: '92%',
+  },
+  scooterImageCompact: {
+    width: '90%',
+    height: '82%',
+    marginTop: 38,
+  },
   topGlow: {
+    opacity: 0.45,
     position: 'absolute',
     width: '72%',
     height: '48%',
@@ -232,11 +156,12 @@ const styles = StyleSheet.create({
     shadowRadius: 65
   },
   floorGlow: {
+    opacity: 0.35,
     position: 'absolute',
-    width: '76%',
-    height: 44,
-    left: '12%',
-    bottom: '9%',
+    width: '82%',
+    height: 52,
+    left: '9%',
+    bottom: '7%',
     borderRadius: 999,
     backgroundColor: 'rgba(184,220,0,0.12)',
     shadowColor: colors.primary,
@@ -295,20 +220,32 @@ const styles = StyleSheet.create({
   },
   qualityBadge: {
     position: 'absolute',
-    left: spacing.md,
-    top: spacing.md,
+    left: 16,
+    top: 16,
     height: 30,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     borderRadius: 15,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     borderWidth: 1,
     borderColor: 'rgba(184,220,0,0.28)',
-    backgroundColor: 'rgba(5,5,5,0.72)'
+    backgroundColor: 'rgba(5,5,5,0.72)',
   },
-  qualityText: { color: colors.primaryLight, fontFamily: fonts.semibold, fontSize: 7, letterSpacing: 0.75 },
-  controlStack: { position: 'absolute', top: spacing.md, right: spacing.md, gap: spacing.xs },
+  qualityText: {
+    color: colors.primaryLight,
+    fontFamily: fonts.semibold,
+    fontSize: 8,
+    letterSpacing: 0.75,
+  },
+  controlStack: {
+    position: 'absolute',
+    right: 16,
+    top: 16,
+    flexDirection: 'row',
+    gap: 8,
+    zIndex: 10,
+  },
   control: {
     width: 40,
     height: 40,
@@ -317,10 +254,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.glassBorder,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  controlActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  instructions: { position: 'absolute', left: spacing.md, bottom: spacing.md, gap: 3 },
-  instructionTitle: { color: colors.heading, fontFamily: fonts.semibold, fontSize: 11 },
-  instructionText: { color: colors.secondary, fontFamily: fonts.regular, fontSize: 8.5 }
+  controlActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  instructions: {
+    position: 'absolute',
+    left: 18,
+    bottom: 12,
+    gap: 3,
+  },
+  instructionTitle: {
+    color: colors.heading,
+    fontFamily: fonts.semibold,
+    fontSize: 10,
+  },
+  instructionText: {
+    color: colors.secondary,
+    fontFamily: fonts.regular,
+    fontSize: 8,
+  },
 });

@@ -22,6 +22,10 @@ const targets: Record<AppHref, Target> = {
   '/(auth)/login': { kind: 'root', screen: 'Login' },
   '/(auth)/signup': { kind: 'root', screen: 'Signup' },
   '/(auth)/otp': { kind: 'root', screen: 'Otp' },
+  '/(auth)/forgot-password': {
+  kind: 'root',
+  screen: 'ForgotPassword',
+},
   '/(tabs)/home': { kind: 'tab', screen: 'Home' },
   '/(tabs)/rides': { kind: 'tab', screen: 'Rides' },
   '/(tabs)/charging': { kind: 'tab', screen: 'Charging' },
@@ -34,25 +38,45 @@ const targets: Record<AppHref, Target> = {
 };
 
 function dispatchHref(href: AppHref, mode: 'push' | 'replace') {
-  if (!navigationRef.isReady()) return;
-  const target = targets[href];
+  const attempt = () => {
+    if (!navigationRef.isReady()) return;
+    const target = targets[href];
+    if (!target) return;
 
-  if (target.kind === 'tab') {
-    if (mode === 'replace') {
-      navigationRef.dispatch(StackActions.replace('MainTabs', { screen: target.screen }));
+    if (target.kind === 'tab') {
+      if (mode === 'replace') {
+        navigationRef.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'MainTabs', params: { screen: target.screen } }]
+          }) as any
+        );
+        return;
+      }
+      navigationRef.navigate('MainTabs', {
+        screen: target.screen,
+      });
       return;
     }
-    navigationRef.navigate('MainTabs', {
-      screen: target.screen,
-    });
-    return;
-  }
 
-  navigationRef.dispatch(
-    mode === 'replace'
-      ? StackActions.replace(target.screen)
-      : StackActions.push(target.screen)
-  );
+    if (mode === 'replace') {
+      navigationRef.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: target.screen }]
+        }) as any
+      );
+      return;
+    }
+
+    navigationRef.dispatch(StackActions.push(target.screen));
+  };
+
+  if (!navigationRef.isReady()) {
+    setTimeout(attempt, 50);
+  } else {
+    attempt();
+  }
 }
 
 export function useRouter() {

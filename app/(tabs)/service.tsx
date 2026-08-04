@@ -19,7 +19,7 @@ import { AppButton, ErrorState, BottomSheet, Chip, GlassCard, Screen, ScreenHead
 import { useToast } from '@/context/ToastContext';
 import { evRepository } from '@/data/repository';
 import { useAsyncResource } from '@/hooks/useAsyncResource';
-import { colors, fonts, radii, spacing } from '@/theme';
+import { colors, fonts, spacing } from '@/theme';
 import { shortDate } from '@/utils/format';
 import { haptic } from '@/utils/haptics';
 

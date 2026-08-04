@@ -42,7 +42,6 @@ export default function OtpScreen() {
     try {
       await verifyOtp(code);
       showToast('Welcome to LEXICON.', 'success');
-      router.replace('/(tabs)/home');
     } catch (error) {
       showToast(errorMessage(error), 'error');
     } finally {

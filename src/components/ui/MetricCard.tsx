@@ -2,7 +2,7 @@ import type { LucideIcon } from 'lucide-react-native';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react-native';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, fonts, radii, spacing } from '@/theme';
+import { colors, fonts, spacing } from '@/theme';
 
 interface MetricCardProps {
   icon: LucideIcon;

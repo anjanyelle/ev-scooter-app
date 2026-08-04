@@ -75,10 +75,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(async () => {
-    await clearStoredSession();
     setSession(null);
     setAuthChallenge(null);
     setStatus('unauthenticated');
+    void clearStoredSession().catch(() => undefined);
   }, []);
 
   const value = useMemo(

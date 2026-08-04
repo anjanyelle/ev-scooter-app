@@ -14,7 +14,7 @@ interface ScreenProps extends PropsWithChildren {
   bottomInset?: number;
 }
 
-export function Screen({ children, scroll = true, refreshing = false, onRefresh, header, contentStyle, bottomInset = layout.bottomTabHeight + spacing.xl }: ScreenProps) {
+export function Screen({ children, scroll = true, refreshing = false, onRefresh, header, contentStyle, bottomInset = layout.bottomTabHeight + spacing.xxl + 20 }: ScreenProps) {
   const refreshProps: RefreshControlProps = { refreshing, tintColor: colors.primary, colors: [colors.primary] };
   if (onRefresh) refreshProps.onRefresh = onRefresh;
   return (
