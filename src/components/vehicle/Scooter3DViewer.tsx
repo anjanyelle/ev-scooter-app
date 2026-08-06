@@ -42,7 +42,7 @@ const Hotspot = memo(function Hotspot({ left, top, label, compact }: HotspotProp
  */
 export function Scooter3DViewer({ compact = false, header }: { compact?: boolean; header?: ReactNode }) {
   const [lightsOn, setLightsOn] = useState(true);
-  const scooterX = useSharedValue(-700);
+  const scooterX = useSharedValue(0);
 const scooterY = useSharedValue(0);
 const scooterRotate = useSharedValue(0);
 const showcaseRotate = useSharedValue(0);
@@ -51,27 +51,13 @@ const scooterScale = useSharedValue(1);
 const headlightOpacity = useSharedValue(0.45);
 const floorScale = useSharedValue(1);
 useEffect(() => {
-  scooterX.value = withSequence(
-    withTiming(18, {
-      duration: 2500,
-      easing: Easing.out(Easing.cubic),
-    }),
-    withSpring(0, {
-      damping: 12,
-      stiffness: 120,
-    }),
-  );
-
-  scooterY.value = withSequence(
-    withTiming(-4, { duration: 180 }),
-    withTiming(2, { duration: 180 }),
-    withTiming(0, { duration: 150 }),
-  );
+ scooterX.value = 0; 
+scooterY.value = 0;
   scooterRotate.value = withRepeat(
   withSequence(
-    withTiming(-2, { duration: 2200 }),
-    withTiming(2, { duration: 2200 }),
-    withTiming(0, { duration: 1800 }),
+    withTiming(-0.8, { duration: 3500 }),
+    withTiming(0.8, { duration: 3500 }),
+    withTiming(0, { duration: 2500 }),
   ),
   -1,
   true,
@@ -79,8 +65,8 @@ useEffect(() => {
 
 scooterScale.value = withRepeat(
   withSequence(
-    withTiming(1.015, { duration: 2200 }),
-    withTiming(1, { duration: 2200 }),
+   withTiming(1.005, { duration: 3500 }),
+   withTiming(1, { duration: 3500 }),
   ),
   -1,
   true,

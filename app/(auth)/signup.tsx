@@ -1,7 +1,7 @@
 import { Link, useRouter } from '@/navigation/router';
 import { LockKeyhole, Mail, UserRound } from 'lucide-react-native';
 import { useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 
 import { AppButton, AppInput, GlassCard, Screen, ScreenHeader } from '@/components/ui';
 import { LexiconLogo } from '@/components/vehicle';
@@ -45,7 +45,10 @@ export default function SignupScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex}>
+    <KeyboardAvoidingView
+  style={styles.flex}
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+>
       <Screen header={<ScreenHeader title="Create account" subtitle="Set up your LEXICON companion" back />} bottomInset={spacing.xxl}>
         <View style={styles.logoWrap}><LexiconLogo centered /></View>
         <GlassCard style={styles.form}>

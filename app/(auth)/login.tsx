@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -76,7 +77,10 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex}>
+    <KeyboardAvoidingView
+  style={styles.flex}
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+>
       <Screen
         scroll={false}
         contentStyle={styles.content}
@@ -205,14 +209,19 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     
   },
-  hero: {
-    height: 300,
-    paddingTop: spacing.xs,
-    paddingHorizontal: spacing.lg,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    overflow: 'hidden',
-  },
+  hero:{
+    height:340,          // increase a little
+    paddingTop:35,       // was spacing.xs
+
+    paddingHorizontal:spacing.lg,
+
+    justifyContent:'flex-start',
+
+    alignItems:'flex-start',
+
+    overflow:'hidden',
+},
+
   backgroundImage:{
     position:'absolute',
 
@@ -243,7 +252,7 @@ logoContainer: {
     zIndex: 0,
   },
  heroCopy:{
-    marginTop:180,
+    marginTop:220,
     width:'100%',
     paddingLeft:16,
 paddingRight:16,

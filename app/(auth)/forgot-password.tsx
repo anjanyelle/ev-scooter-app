@@ -5,6 +5,10 @@ import {
   Text,
   View,
 } from 'react-native';
+import {
+  
+  Platform,
+} from 'react-native';
 
 import { Mail } from 'lucide-react-native';
 
@@ -53,7 +57,10 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex}>
+    <KeyboardAvoidingView
+  style={styles.flex}
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+>
       <Screen>
 
         <View style={styles.header}>
