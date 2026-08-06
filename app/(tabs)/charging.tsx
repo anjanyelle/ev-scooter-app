@@ -12,8 +12,16 @@ import {
   SquareStop,
   Zap
 } from 'lucide-react-native';
+import { Easing } from 'react-native-reanimated';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import type { LucideIcon } from 'lucide-react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { CircularProgress } from '@/components/charts';
@@ -26,6 +34,65 @@ import { formatCurrency, formatDuration, formatRideDate } from '@/utils/format';
 import { haptic } from '@/utils/haptics';
 
 export default function ChargingScreen() {
+  const particle1 = useSharedValue(0);
+const particle2 = useSharedValue(0);
+const particle3 = useSharedValue(0);
+ 
+const particleStyle1 = useAnimatedStyle(() => ({
+  transform: [
+    {
+      translateY: -particle1.value * 90,
+    },
+  ],
+  opacity: 1 - particle1.value,
+}));
+
+const particleStyle2 = useAnimatedStyle(() => ({
+  transform: [
+    {
+      translateY: -particle2.value * 70,
+    },
+  ],
+  opacity: 1 - particle2.value,
+}));
+
+const particleStyle3 = useAnimatedStyle(() => ({
+  transform: [
+    {
+      translateY: -particle3.value * 80,
+    },
+  ],
+  opacity: 1 - particle3.value,
+}));
+useEffect(() => {
+  particle1.value = withRepeat(
+    withTiming(1, {
+      duration: 2300,
+      easing: Easing.linear,
+    }),
+    -1,
+    false,
+  );
+
+  particle2.value = withRepeat(
+    withTiming(1, {
+      duration: 2700,
+      easing: Easing.linear,
+    }),
+    -1,
+    false,
+  );
+
+  particle3.value = withRepeat(
+    withTiming(1, {
+      duration: 3100,
+      easing: Easing.linear,
+    }),
+    -1,
+    false,
+  );
+}, []);
+
   const { showToast } = useToast();
   const resource = useAsyncResource(() => evRepository.getCharging(), []);
   const [stopping, setStopping] = useState(false);
@@ -75,18 +142,103 @@ export default function ChargingScreen() {
       <GlassCard>
         <View style={styles.titleRow}>
           <Text style={styles.cardTitle}>Charging Status</Text>
-          <StatusPill label={charging ? 'Charging' : 'Paused'} color={charging ? colors.primary : colors.warning} />
-        </View>
-        <View style={styles.chargeStatus}>
-          <CircularProgress value={data.batteryPercentage} size={154} strokeWidth={11} label="Battery Level" gradientId="chargeRing" />
-          <View style={styles.statsGrid}>
-            <ChargeMetric icon={Zap} label="Time to Full Charge" value={charging ? formatDuration(data.timeToFullMinutes) : 'Paused'} />
-            <ChargeMetric icon={ReceiptIndianRupee} label="Charging Cost" value={formatCurrency(data.currentSessionCost)} />
-            <ChargeMetric icon={PlugZap} label="Charging Power" value={charging ? `${data.powerKw} kW` : '0.0 kW'} />
-            <ChargeMetric icon={Clock3} label="Session Duration" value={formatDuration(data.currentSessionMinutes)} />
-            <ChargeMetric icon={Gauge} label="Current Range" value={`${data.currentRangeKm} km`} />
-            <ChargeMetric icon={BatteryCharging} label="Charge Mode" value="Optimized" />
-          </View>
+<View
+  style={{
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  }}
+>
+  
+ <View
+  style={{
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  }}
+>
+  
+
+  <StatusPill
+    label={charging ? 'Charging' : 'Paused'}
+    color={charging ? colors.primary : colors.warning}
+  />
+</View>
+</View>        </View>
+<View style={styles.chargeStatus}>
+
+  <View style={styles.ringSection}>
+    <View
+  style={{
+    width:160,
+    height:160,
+    alignItems:'center',
+    justifyContent:'center',
+  }}
+>
+    <CircularProgress
+        value={data.batteryPercentage}
+        size={160}
+        strokeWidth={11}
+        label="Battery Level"
+        gradientId="chargeRing"
+    />
+</View>
+     
+  <Animated.View
+    style={[
+      styles.particle1,
+      particleStyle1,
+    ]}
+  />
+
+  <Animated.View
+    style={[
+      styles.particle2,
+      particleStyle2,
+    ]}
+  />
+
+  <Animated.View
+    style={[
+      styles.particle3,
+      particleStyle3,
+    ]}
+  />
+
+</View>
+
+<View style={styles.metricSection}>
+
+  <ChargeMetric
+    icon={PlugZap}
+    label="Charging Power"
+    value={`${data.powerKw} kW`}
+  />
+
+  <ChargeMetric
+    icon={Clock3}
+    label="Time Remaining"
+    value={
+      charging
+        ? formatDuration(data.timeToFullMinutes)
+        : 'Paused'
+    }
+  />
+
+  <ChargeMetric
+    icon={Gauge}
+    label="Current Range"
+    value={`${data.currentRangeKm} km`}
+  />
+
+  <ChargeMetric
+    icon={ReceiptIndianRupee}
+    label="Current Cost"
+    value={formatCurrency(data.currentSessionCost)}
+  />
+
+</View>
         </View>
         <View style={styles.homeRow}>
           <View style={styles.homeInfo}>
@@ -185,12 +337,63 @@ function SessionValue({ label, value, accent = false }: { label: string; value: 
 const styles = StyleSheet.create({
   titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   cardTitle: { color: colors.heading, fontFamily: fonts.bold, fontSize: 16 },
-  chargeStatus: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.md },
+ chargeStatus:{
+    flexDirection:'row',
+    alignItems:'center',
+},
+
+ringSection:{
+    width:170,
+    alignItems:'center',
+    justifyContent:'center',
+},
+
+metricSection:{
+    flex:1,
+    paddingLeft:14,
+},
+
   statsGrid: { flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  chargeMetric: { width: '46%', flexGrow: 1, flexDirection: 'row', alignItems: 'center', gap: 6 },
+chargeMetric:{
+  flexDirection:'row',
+  alignItems:'center',
+  gap:10,
+  paddingVertical:10,
+  borderBottomWidth:1,
+  borderBottomColor:colors.divider,
+},
+particle1:{
+  position:'absolute',
+  bottom:18,
+  left:68,
+  width:5,
+  height:5,
+  borderRadius:3,
+  backgroundColor:colors.primary,
+},
+
+particle2:{
+  position:'absolute',
+  bottom:42,
+  left:42,
+  width:4,
+  height:4,
+  borderRadius:2,
+  backgroundColor:colors.primaryLight,
+},
+
+particle3:{
+  position:'absolute',
+  bottom:35,
+  right:44,
+  width:5,
+  height:5,
+  borderRadius:3,
+  backgroundColor:colors.primary,
+},
   smallIcon: { width: 30, height: 30, borderRadius: 10, backgroundColor: `${colors.primary}10`, alignItems: 'center', justifyContent: 'center' },
-  chargeLabel: { color: colors.muted, fontFamily: fonts.regular, fontSize: 7.5 },
-  chargeValue: { color: colors.primaryLight, fontFamily: fonts.semibold, fontSize: 10, marginTop: 2 },
+  chargeLabel: { color: colors.muted, fontFamily: fonts.regular, fontSize: 11 },
+  chargeValue: { color: colors.primaryLight, fontFamily: fonts.semibold, fontSize: 17, marginTop: 2 },
   homeRow: { marginTop: spacing.md, minHeight: 64, borderRadius: radii.button, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, padding: spacing.sm, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
   homeInfo: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   homeIcon: { width: 36, height: 36, borderRadius: 12, backgroundColor: `${colors.primary}12`, alignItems: 'center', justifyContent: 'center' },

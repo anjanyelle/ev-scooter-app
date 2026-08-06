@@ -35,7 +35,7 @@ export function BottomSheet({ visible, onClose, title, subtitle, children }: Bot
         <Animated.View style={[styles.backdrop, { opacity: backdropOpacity }]}>
           <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
         </Animated.View>
-        <ReAnimated.View entering={SlideInDown.springify().damping(20)} exiting={SlideOutDown.duration(220)} style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, spacing.lg) }]}>
+        <ReAnimated.View entering={SlideInDown.springify().damping(220)} exiting={SlideOutDown.duration(220)} style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, spacing.lg) }]}>
           <View style={styles.handle} />
           <View style={styles.header}>
             <View style={styles.copy}>

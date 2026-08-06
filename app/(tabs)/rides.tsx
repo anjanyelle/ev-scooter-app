@@ -69,7 +69,7 @@ export default function RidesScreen() {
         <MetricCard icon={Clock3} label="Ride Time" value={formatDuration(data.rideTimeMinutes)} trend={data.trendPercent.rideTime} helper="vs yesterday" compact />
         <GlassCard style={styles.ecoCard} padding={spacing.sm}>
           <View style={styles.ecoTitle}><Leaf size={16} color={colors.primary} /><Text style={styles.ecoLabel}>Eco Score</Text></View>
-          <CircularProgress value={data.ecoScore} size={76} strokeWidth={6} suffix="" label="Excellent" gradientId="ecoRing" />
+          <CircularProgress value={data.ecoScore} size={80} strokeWidth={8} suffix="" label="Excellent" gradientId="ecoRing" />
         </GlassCard>
       </View>
 

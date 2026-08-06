@@ -10,7 +10,7 @@ import type { AuthChallenge, AuthSession, UserProfile } from '@/types/domain';
 import type { AuthInput, EVRepository, OtpVerificationInput } from '@/types/repository';
 
 const PREVIEW_OTP = '2468';
-const sleep = (ms = 650) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const sleep = (ms = 180) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 
 function createChallenge(identifier: string): AuthChallenge {
@@ -99,10 +99,10 @@ export class MockEVRepository implements EVRepository {
     return clone(this.pendingChallenge);
   }
 
-  async getDashboard() {
-    await sleep();
-    return clone(dashboardFixture);
-  }
+ async getDashboard() {
+  await sleep(120);
+  return clone(dashboardFixture);
+}
 
   async getRideStats(period: 'day' | 'week' | 'month' | 'year') {
     await sleep(550);
@@ -118,23 +118,23 @@ export class MockEVRepository implements EVRepository {
     return data;
   }
 
-  async getCharging() {
-    await sleep();
-    return clone(chargingFixture);
-  }
+ async getCharging() {
+  await sleep(120);
+  return clone(chargingFixture);
+}
 
   async getNotifications() {
-    await sleep(500);
+    await sleep(300);
     return clone(notificationsFixture);
   }
 
   async getService() {
-    await sleep();
+    await sleep(200);
     return clone(serviceFixture);
   }
 
   async sendVehicleCommand(command: 'lock' | 'unlock' | 'lights' | 'horn' | 'stop_charging') {
-    await sleep(420);
+    await sleep(320);
     const copy: Record<typeof command, string> = {
       lock: 'Scooter locked securely',
       unlock: 'Scooter unlocked for 60 seconds',

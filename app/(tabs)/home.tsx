@@ -1,3 +1,4 @@
+import { Bluetooth } from 'lucide-react-native';
 import {
   BatteryCharging,
   Bell,
@@ -13,13 +14,22 @@ import {
   Unlock,
   Volume2,
   Zap
+  
 } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { useRouter } from '@/navigation/router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-
+import Animated, {
+  FadeInDown,
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  withSequence,
+  Easing,
+  withSpring,
+} from 'react-native-reanimated';
 import { CircularProgress } from '@/components/charts';
 import {
   ErrorState,
@@ -52,7 +62,84 @@ export default function HomeScreen() {
   const resource = useAsyncResource(() => evRepository.getDashboard(), []);
   const [locked, setLocked] = useState(true);
   const [commanding, setCommanding] = useState<string | null>(null);
+  const [bluetoothConnected, setBluetoothConnected] = useState(false);
+const [bluetoothLoading, setBluetoothLoading] = useState(false);
+const bluetoothScale = useSharedValue(1);
+useEffect(() => {
+  if (bluetoothLoading) {
+    bluetoothScale.value = withRepeat(
+      withTiming(1.2, {
+        duration: 700,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      -1,
+      true,
+    );
+  } else {
+    bluetoothScale.value = withTiming(1);
+  }
+}, [bluetoothLoading]);
+const bluetoothAnimatedStyle = useAnimatedStyle(() => ({
+  transform: [
+    {
+      scale: bluetoothScale.value,
+    },
+  ],
+}));
 
+const scooterX = useSharedValue(-500);
+
+useEffect(() => {
+  if (!resource.data) return;
+
+  scooterX.value = -450;
+
+  scooterX.value = withTiming(
+    0,
+    {
+      duration: 2200,
+      easing: Easing.out(Easing.cubic),
+    },
+    () => {
+     
+
+     
+    },
+  );
+}, [resource.data]);
+
+const floatingStyle = useAnimatedStyle(() => ({
+  transform: [
+    {
+      translateX: scooterX.value
+    },
+    
+  ],
+}));
+
+const bellRotation = useSharedValue(0);
+
+useEffect(() => {
+  bellRotation.value = withRepeat(
+    withSequence(
+      withTiming(8, { duration: 90 }),
+      withTiming(-8, { duration: 90 }),
+      withTiming(5, { duration: 90 }),
+      withTiming(0, { duration: 90 }),
+      withTiming(0, { duration: 600 })
+    ),
+    -1,
+    false
+  );
+}, []);
+
+const bellAnimatedStyle = useAnimatedStyle(() => ({
+  transform: [
+    {
+      rotate: `${bellRotation.value}deg`,
+    },
+  ],
+}));
   useEffect(() => {
     if (resource.data) setLocked(resource.data.vehicle.isLocked);
   }, [resource.data]);
@@ -81,6 +168,44 @@ export default function HomeScreen() {
       setCommanding(null);
     }
   };
+    const connectBluetooth = async () => {
+  // Disconnect
+  if (bluetoothConnected) {
+    setBluetoothConnected(false);
+
+    showToast(
+      'Scooter disconnected.',
+      'info',
+    );
+
+    return;
+  }
+
+  // Connect
+  setBluetoothLoading(true);
+
+  showToast(
+    'Searching for nearby scooter...',
+    'info',
+  );
+  await new Promise<void>((resolve) => {
+  setTimeout(() => {
+    resolve();
+  }, 1800);
+});
+
+  
+
+  setBluetoothLoading(false);
+
+  setBluetoothConnected(true);
+
+  showToast(
+    'Scooter connected successfully.',
+    'success',
+  );
+};
+
 
   if (resource.loading) {
     return (
@@ -107,15 +232,26 @@ export default function HomeScreen() {
           <Text style={styles.eyebrow}>GOOD EVENING</Text>
           <Text style={styles.greeting}>{user.name.split(' ')[0]}, your ride is ready.</Text>
         </View>
-        <Pressable style={styles.headerButton} onPress={() => router.push('/notifications')}>
+        <Animated.View style={bellAnimatedStyle}>
+  <Pressable
+    style={styles.headerButton}
+    onPress={() => router.push('/notifications')}
+  >
           <Bell size={20} color={colors.heading} />
           <View style={styles.unreadDot} />
         </Pressable>
+        </Animated.View>
       </View>
 
-      <Animated.View entering={FadeInDown.duration(420)}>
-        <GlassCard padding={0} style={styles.viewerCard}>
-          <Scooter3DViewer
+<Animated.View
+  entering={FadeInDown.delay(200).duration(900)}
+  style={floatingStyle}
+>
+  <GlassCard
+    padding={0}
+    style={styles.viewerCard}
+  >
+    <Scooter3DViewer
             compact
             header={
               <View style={styles.vehicleTopline}>
@@ -127,10 +263,119 @@ export default function HomeScreen() {
                     {vehicle.model} · {vehicle.registrationNumber}
                   </Text>
                 </View>
-                <StatusPill
-                  label={vehicle.status === 'parked' ? 'Secured' : vehicle.status}
-                  color={colors.success}
-                />
+                <View
+  style={{
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  }}
+>
+
+  <Pressable
+  onPress={() => void connectBluetooth()}
+  style={{
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 20,
+    backgroundColor: bluetoothConnected
+  ? 'rgba(184,220,0,0.12)'
+  : 'rgba(255,255,255,0.05)',
+    borderWidth: 1,
+    borderColor: bluetoothConnected
+  ? colors.primary
+  : colors.border
+  }}
+>
+ <View
+  style={{
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  }}
+>
+  <Animated.View style={bluetoothAnimatedStyle}>
+    <Bluetooth
+      size={14}
+      color={
+        bluetoothConnected
+          ? colors.primary
+          : bluetoothLoading
+          ? colors.warning
+          : colors.secondary
+      }
+    />
+  </Animated.View>
+
+  {bluetoothConnected && (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        gap: 2,
+      }}
+    >
+      {[8, 11, 14].map((height) => (
+        <View
+          key={height}
+          style={{
+            width: 2,
+            height,
+            borderRadius: 2,
+            backgroundColor: colors.primary,
+          }}
+        />
+      ))}
+    </View>
+  )}
+
+  <View>
+    <Text
+      style={{
+        color: bluetoothConnected
+          ? colors.primary
+          : bluetoothLoading
+          ? colors.warning
+          : colors.secondary,
+        fontSize: 11,
+        fontWeight: '600',
+      }}
+    >
+     {bluetoothLoading
+  ? 'Searching...'
+  : bluetoothConnected
+  ? 'Linked'
+  : 'Pair'}
+    </Text>
+
+    {bluetoothConnected && (
+      <Text
+        style={{
+          color: colors.success,
+          fontSize: 9,
+        }}
+      >
+        Nearby • 4 m
+      </Text>
+    )}
+
+   
+  </View>
+</View>
+
+</Pressable>
+  <StatusPill
+    label={
+      vehicle.status === 'parked'
+        ? 'Secured'
+        : vehicle.status
+    }
+    color={colors.success}
+  />
+
+</View>
               </View>
             }
           />
@@ -144,7 +389,32 @@ export default function HomeScreen() {
 
       <View style={styles.metricRow}>
         <GlassCard style={styles.batteryCard}>
-          <CircularProgress value={vehicle.batteryPercentage} size={124} strokeWidth={9} label="Battery level" gradientId="homeBattery" />
+<View
+  style={{
+    width: 150,
+    height: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  }}
+>
+  <View
+  style={{
+    width: 150,
+    height: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  }}
+>
+  <CircularProgress
+    value={vehicle.batteryPercentage}
+    size={150}
+    strokeWidth={10}
+    label="Battery level"
+  />
+</View>
+</View>
           <View style={styles.metricFooter}>
             <Text style={styles.metricLabel}>Battery health</Text>
             <Text style={styles.metricValue}>{vehicle.batteryHealth}%</Text>
@@ -173,6 +443,7 @@ export default function HomeScreen() {
       <View style={styles.actionGrid}>
         <QuickAction
           icon={locked ? Unlock : Lock}
+          disabled={!bluetoothConnected}
           label={locked ? "Unlock" : "Lock"}
           loading={commanding === (locked ? "unlock" : "lock")}
           onPress={() => void command(locked ? "unlock" : "lock")}
@@ -180,6 +451,7 @@ export default function HomeScreen() {
 
         <QuickAction
           icon={Lightbulb}
+          disabled={!bluetoothConnected}
           label="Flash lights"
           loading={commanding === "lights"}
           onPress={() => void command("lights")}
@@ -187,6 +459,7 @@ export default function HomeScreen() {
 
         <QuickAction
           icon={Volume2}
+          disabled={!bluetoothConnected}
           label="Sound horn"
           loading={commanding === "horn"}
           onPress={() => void command("horn")}
@@ -194,6 +467,7 @@ export default function HomeScreen() {
 
         <QuickAction
           icon={MapPin}
+          disabled={!bluetoothConnected}
           label="Live tracking"
           onPress={() => router.push("/tracking")}
         />
@@ -232,11 +506,72 @@ export default function HomeScreen() {
   );
 }
 
-function QuickAction({ icon: Icon, label, onPress, loading = false }: { icon: LucideIcon; label: string; onPress: () => void; loading?: boolean }) {
+function QuickAction({
+  icon: Icon,
+  label,
+  onPress,
+  loading = false,
+  disabled = false,
+}: {
+  icon: LucideIcon;
+  label: string;
+  onPress: () => void;
+  loading?: boolean;
+  disabled?: boolean;
+}) {
+  const { showToast } = useToast();
+
   return (
-    <Pressable style={styles.quickAction} onPress={() => { void haptic.select(); onPress(); }} disabled={loading}>
-      <View style={styles.quickIcon}>{loading ? <View style={styles.loadingPulse} /> : <Icon size={22} color={colors.primary} strokeWidth={2.2} />}</View>
-      <Text style={styles.quickLabel}>{loading ? 'Sending…' : label}</Text>
+    <Pressable
+      disabled={loading}
+      onPress={() => {
+        if (disabled) {
+          void haptic.warning();
+
+          showToast(
+            'Connect Bluetooth to control your scooter.',
+            'warning',
+          );
+
+          return;
+        }
+
+        void haptic.select();
+        onPress();
+      }}
+      style={[
+        styles.quickAction,
+        disabled && {
+          opacity: 0.45,
+        },
+      ]}
+    >
+      <View style={styles.quickIcon}>
+        {loading ? (
+          <View style={styles.loadingPulse} />
+        ) : (
+          <Icon
+            size={22}
+            color={
+              disabled
+                ? colors.muted
+                : colors.primary
+            }
+            strokeWidth={2.2}
+          />
+        )}
+      </View>
+
+      <Text
+        style={[
+          styles.quickLabel,
+          disabled && {
+            color: colors.muted,
+          },
+        ]}
+      >
+        {loading ? 'Sending…' : label}
+      </Text>
     </Pressable>
   );
 }
@@ -272,7 +607,13 @@ const styles = StyleSheet.create({
   viewerCta: { minHeight: 44, marginTop: spacing.sm, borderRadius: radii.button, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.xs },
   viewerCtaText: { color: colors.heading, fontFamily: fonts.medium, fontSize: 12 },
   metricRow: { flexDirection: 'row', gap: spacing.sm },
-  batteryCard: { flex: 1, alignItems: 'center', gap: spacing.sm, paddingHorizontal: spacing.sm },
+
+  batteryCard:{
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center',
+    overflow:'visible',
+},
   rangeCard: { flex: 1, justifyContent: 'center', gap: spacing.xs },
   rangeIcon: { width: 44, height: 44, borderRadius: 15, backgroundColor: `${colors.primary}12`, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.xs },
   rangeValue: { color: colors.heading, fontFamily: fonts.numeric, fontSize: 30, letterSpacing: -0.8 },

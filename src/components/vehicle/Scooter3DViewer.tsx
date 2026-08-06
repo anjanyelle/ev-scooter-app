@@ -1,9 +1,16 @@
 import LinearGradient from '@/components/system/LinearGradient';
 import { Lightbulb, RotateCcw, ScanLine } from 'lucide-react-native';
-import { memo, useState } from 'react';
-import type { ReactNode } from 'react';
+import { memo, useEffect, useState } from 'react';import type { ReactNode } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withSpring,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 import { colors, fonts, radii, shadows } from '@/theme';
 import { haptic } from '@/utils/haptics';
 
@@ -35,6 +42,117 @@ const Hotspot = memo(function Hotspot({ left, top, label, compact }: HotspotProp
  */
 export function Scooter3DViewer({ compact = false, header }: { compact?: boolean; header?: ReactNode }) {
   const [lightsOn, setLightsOn] = useState(true);
+  const scooterX = useSharedValue(-700);
+const scooterY = useSharedValue(0);
+const scooterRotate = useSharedValue(0);
+const showcaseRotate = useSharedValue(0);
+const scooterScale = useSharedValue(1);
+
+const headlightOpacity = useSharedValue(0.45);
+const floorScale = useSharedValue(1);
+useEffect(() => {
+  scooterX.value = withSequence(
+    withTiming(18, {
+      duration: 2500,
+      easing: Easing.out(Easing.cubic),
+    }),
+    withSpring(0, {
+      damping: 12,
+      stiffness: 120,
+    }),
+  );
+
+  scooterY.value = withSequence(
+    withTiming(-4, { duration: 180 }),
+    withTiming(2, { duration: 180 }),
+    withTiming(0, { duration: 150 }),
+  );
+  scooterRotate.value = withRepeat(
+  withSequence(
+    withTiming(-2, { duration: 2200 }),
+    withTiming(2, { duration: 2200 }),
+    withTiming(0, { duration: 1800 }),
+  ),
+  -1,
+  true,
+);
+
+scooterScale.value = withRepeat(
+  withSequence(
+    withTiming(1.015, { duration: 2200 }),
+    withTiming(1, { duration: 2200 }),
+  ),
+  -1,
+  true,
+);
+
+  headlightOpacity.value = withRepeat(
+    withSequence(
+      withTiming(0.9, { duration: 1200 }),
+      withTiming(0.45, { duration: 1200 }),
+    ),
+    -1,
+    false,
+  );
+
+  floorScale.value = withRepeat(
+    withSequence(
+      withTiming(1.15, { duration: 1500 }),
+      withTiming(1, { duration: 1500 }),
+    ),
+    -1,
+    false,
+  );
+  showcaseRotate.value = withRepeat(
+  withSequence(
+    withTiming(0, {
+      duration: 10000,
+    }),
+
+    withTiming(-4, {
+      duration: 600,
+    }),
+
+    withTiming(4, {
+      duration: 600,
+    }),
+
+    withTiming(0, {
+      duration: 600,
+    }),
+  ),
+  -1,
+  false,
+);
+}, []);
+const scooterAnimatedStyle = useAnimatedStyle(() => ({
+  transform: [
+    { translateX: scooterX.value },
+    { translateY: scooterY.value },
+{
+  rotateZ: `${scooterRotate.value + showcaseRotate.value}deg`,
+},    { scale: scooterScale.value },
+  ],
+}));
+
+ const headlightAnimatedStyle = useAnimatedStyle(() => ({
+  opacity: headlightOpacity.value,
+  transform: [
+    {
+      scale: 0.95 + headlightOpacity.value * 0.08,
+    },
+  ],
+}));
+
+const floorAnimatedStyle = useAnimatedStyle(() => ({
+  opacity: 0.28 + (floorScale.value - 1) * 1.8,
+
+  transform: [
+    {
+      scale: floorScale.value,
+    },
+  ],
+}));
 
   const toggleLights = () => {
     const next = !lightsOn;
@@ -55,18 +173,32 @@ export function Scooter3DViewer({ compact = false, header }: { compact?: boolean
           style={StyleSheet.absoluteFill}
         />
         <View style={styles.topGlow} pointerEvents="none" />
-        <View style={styles.floorGlow} pointerEvents="none" />
+        <Animated.View
+  style={[styles.floorGlow, floorAnimatedStyle]}
+  pointerEvents="none"
+/>
         {header ? <View style={styles.headerWrapper}>{header}</View> : null}
 
         <View style={styles.scene} pointerEvents="none">
-          <Image
+          <Animated.Image
             source={scooterSource}
             resizeMode="contain"
             fadeDuration={0}
-            style={[styles.scooterImage, compact ? styles.scooterImageCompact : null]}
+           style={[
+    styles.scooterImage,
+    compact ? styles.scooterImageCompact : null,
+    scooterAnimatedStyle,
+]}
             accessibilityIgnoresInvertColors
           />
-          {!compact && lightsOn ? <View style={styles.headlightBloom} /> : null}
+          {!compact && lightsOn ? (
+  <Animated.View
+    style={[
+      styles.headlightBloom,
+      headlightAnimatedStyle,
+    ]}
+  />
+) : null}
           {!compact ? <Hotspot left="67%" top="44%" label="LED projector" compact={compact} /> : null}
           {!compact ? <Hotspot left="47%" top="62%" label="Battery pack" compact={compact} /> : null}
           {!compact ? <Hotspot left="28%" top="72%" label="Electric drive" compact={compact} /> : null}

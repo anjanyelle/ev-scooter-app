@@ -1,8 +1,9 @@
 import LinearGradient from '@/components/system/LinearGradient';
 import { Link, useRouter } from '@/navigation/router';
 import { LockKeyhole, Mail, Sparkles } from 'lucide-react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  Image,
   ImageBackground,
   KeyboardAvoidingView,
   StyleSheet,
@@ -20,6 +21,7 @@ import { LexiconLogo } from '@/components/vehicle';
 import { runtimeConfig } from '@/config/runtime';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
+import Animated from 'react-native-reanimated';
 import {
   colors,
   fonts,
@@ -42,6 +44,7 @@ export default function LoginScreen() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  
 
   const submit = async () => {
     if (!identifier.trim() || !password) {
@@ -78,11 +81,7 @@ export default function LoginScreen() {
         contentStyle={styles.content}
         bottomInset={spacing.xxl}
       >
-        <ImageBackground
-          source={require('../../assets/scooter.png')}
-          style={styles.hero}
-          imageStyle={styles.heroImage}
-        >
+       <View style={styles.hero}>
           <LinearGradient
             colors={[
               'transparent',
@@ -91,6 +90,13 @@ export default function LoginScreen() {
             ]}
             style={StyleSheet.absoluteFill}
           />
+          <View style={styles.scooterGlow} />
+
+<Image
+  source={require('../../assets/frontview.png')}
+  resizeMode="contain"
+  style={styles.loginScooter}
+/>
 
           <View style={styles.logo}>
             <LexiconLogo compact />
@@ -117,7 +123,7 @@ export default function LoginScreen() {
               LEXICON scooter.
             </Text>
           </View>
-        </ImageBackground>
+       </View>
 
         <GlassCard style={styles.form}>
           <AppInput
@@ -198,28 +204,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     gap: 0,
   },
+hero:{
+    height:315,
 
-  hero: {
-    height: 390,
-    justifyContent: 'space-between',
-  },
+    justifyContent:'flex-start',
 
-  heroImage: {
-    resizeMode: 'cover',
-    opacity: 0.76,
-  },
+    alignItems:'center',
 
-  logo: {
-    paddingTop: spacing.sm,
-    paddingHorizontal: spacing.lg,
-  },
+    overflow:'hidden',
+},
+  
 
-  heroCopy: {
-    padding: spacing.lg,
-    gap: spacing.sm,
-    paddingBottom: spacing.huge,
-  },
+ logo: {
+  position: 'absolute',
+  top: 18,
+  left: 20,
+  zIndex: 5,
+},
+heroCopy:{
+    marginTop:208,
 
+    width:'100%',
+
+    paddingHorizontal:spacing.lg,
+
+    gap:spacing.sm,
+},
   pill: {
     alignSelf: 'flex-start',
     flexDirection: 'row',
@@ -255,10 +265,10 @@ const styles = StyleSheet.create({
   },
 
   form: {
-    marginHorizontal: spacing.md,
-    marginTop: -28,
-    gap: spacing.md,
-  },
+  marginHorizontal: spacing.md,
+  marginTop: 0,
+  gap: spacing.md,
+},
 
   forgotRow: {
     alignItems: 'flex-end',
@@ -296,5 +306,24 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: fonts.semibold,
     fontSize: 12,
-  },
+    },
+ loginScooter:{
+    position:'absolute',
+
+    top:38,
+
+    width:320,
+
+    height:240,
+
+    zIndex:2,
+},
+scooterGlow: {
+  position: 'absolute',
+  top: 22,
+  width: 220,
+  height: 220,
+  borderRadius: 110,
+  backgroundColor: 'rgba(184,220,0,0.06)',
+},
 });
