@@ -9,7 +9,6 @@ import Svg, {
 } from 'react-native-svg';
 
 import Animated, {
-  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -62,23 +61,7 @@ export function CircularProgress({
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference - (normalized / 100) * circumference;
-   const glowOffset = useSharedValue(circumference);
   const ringScale = useSharedValue(1);
-useEffect(() => {
-  glowOffset.value = circumference;
-
-  glowOffset.value = withRepeat(
-    withTiming(
-      dashOffset,
-      {
-        duration: 1800,
-        easing: Easing.linear,
-      },
-    ),
-    -1,
-    false,
-  );
-}, [dashOffset, circumference]);
 
 useEffect(() => {
   ringScale.value = withRepeat(
@@ -94,17 +77,13 @@ useEffect(() => {
     false,
   );
 }, []);
+
 const ringAnimatedStyle = useAnimatedStyle(() => ({
   transform: [
     {
       scale: ringScale.value,
     },
   ],
-}));
-
-const glowAnimatedProps = useAnimatedProps(() => ({
-  strokeDashoffset: glowOffset.value,
-  opacity: normalized > 0 ? 1 : 0,
 }));
 
   return (
@@ -134,7 +113,7 @@ const glowAnimatedProps = useAnimatedProps(() => ({
           cy={size / 2}
           r={radius}
           stroke={`url(#${gradientId})`}
-          strokeWidth={strokeWidth - 1}
+          strokeWidth={Math.max(1, strokeWidth - 1)}
           strokeLinecap="round"
           fill="transparent"
           strokeDasharray={`${circumference} ${circumference}`}
@@ -142,19 +121,6 @@ const glowAnimatedProps = useAnimatedProps(() => ({
           rotation="-90"
           origin={`${size / 2}, ${size / 2}`}
         />
-        <AnimatedCircle
-  animatedProps={glowAnimatedProps}
-  cx={size / 2}
-  cy={size / 2}
-  r={radius}
-stroke={colors.primaryLight}  strokeWidth={strokeWidth - 2}
-  strokeLinecap="round"
-  fill="transparent"
-  strokeDasharray={`${circumference * 0.020} ${circumference}`}
-  rotation="-90"
-  origin={`${size / 2}, ${size / 2}`}
-/>
-        
       </Svg>
       </Animated.View>
       <View style={styles.center}>

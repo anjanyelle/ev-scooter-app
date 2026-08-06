@@ -78,6 +78,7 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView style={styles.flex}>
       <Screen
+        scroll={false}
         contentStyle={styles.content}
         bottomInset={spacing.xxl}
       >
@@ -88,22 +89,20 @@ export default function LoginScreen() {
               'rgba(5,5,5,0.55)',
               colors.background,
             ]}
-            style={StyleSheet.absoluteFill}
+            style={[StyleSheet.absoluteFill, styles.gradient]}
           />
-          <View style={styles.scooterGlow} />
+          <Image
+            source={require('../../assets/frontview.png')}
+            resizeMode="cover"
+            style={styles.backgroundImage}
+          />
 
-<Image
-  source={require('../../assets/frontview.png')}
-  resizeMode="contain"
-  style={styles.loginScooter}
-/>
-
-          <View style={styles.logo}>
+          <View style={styles.logoContainer}>
             <LexiconLogo compact />
           </View>
 
           <View style={styles.heroCopy}>
-            <View style={styles.pill}>
+            <View style={[styles.pill, styles.pillFlush]}>
               <Sparkles
                 size={14}
                 color={colors.primary}
@@ -203,32 +202,53 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 0,
     gap: 0,
+    flexGrow: 1,
+    
   },
-hero:{
-    height:315,
+  hero: {
+    height: 300,
+    paddingTop: spacing.xs,
+    paddingHorizontal: spacing.lg,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    overflow: 'hidden',
+  },
+  backgroundImage:{
+    position:'absolute',
 
-    justifyContent:'flex-start',
+    top:55,
 
-    alignItems:'center',
+    left:'50%',
 
-    overflow:'hidden',
+    width:300,
+
+    height:235,
+
+    transform:[
+        { translateX:-150 },
+    ],
+
+    opacity:0.20,
+
+    zIndex:0,
 },
-  
-
- logo: {
-  position: 'absolute',
-  top: 18,
-  left: 20,
-  zIndex: 5,
+logoContainer: {
+    position: 'absolute',
+    top: 18,
+    left: 20,
+    zIndex: 20,
 },
-heroCopy:{
-    marginTop:208,
 
+  gradient: {
+    zIndex: 0,
+  },
+ heroCopy:{
+    marginTop:180,
     width:'100%',
-
-    paddingHorizontal:spacing.lg,
-
+    paddingLeft:16,
+paddingRight:16,
     gap:spacing.sm,
+    zIndex:5,
 },
   pill: {
     alignSelf: 'flex-start',
@@ -243,6 +263,10 @@ heroCopy:{
     paddingVertical: spacing.xs,
   },
 
+  pillFlush: {
+    marginTop: 0,
+  },
+
   pillText: {
     color: colors.primaryLight,
     fontFamily: fonts.medium,
@@ -254,21 +278,22 @@ heroCopy:{
     fontFamily: fonts.bold,
     fontSize: 32,
     letterSpacing: -0.5,
+    lineHeight: 36,
   },
 
   heroSubtitle: {
     color: colors.body,
     fontFamily: fonts.regular,
     fontSize: 14,
-    lineHeight: 21,
+    lineHeight: 22,
     maxWidth: 330,
   },
 
   form: {
-  marginHorizontal: spacing.md,
-  marginTop: 0,
-  gap: spacing.md,
-},
+    marginHorizontal: spacing.md,
+    marginTop: 0,
+    gap: spacing.md,
+  },
 
   forgotRow: {
     alignItems: 'flex-end',
@@ -306,24 +331,9 @@ heroCopy:{
     color: colors.primary,
     fontFamily: fonts.semibold,
     fontSize: 12,
-    },
- loginScooter:{
-    position:'absolute',
+  },
 
-    top:38,
-
-    width:320,
-
-    height:240,
-
-    zIndex:2,
-},
-scooterGlow: {
-  position: 'absolute',
-  top: 22,
-  width: 220,
-  height: 220,
-  borderRadius: 110,
-  backgroundColor: 'rgba(184,220,0,0.06)',
-},
+  loginScooter: {
+    display: 'none',
+  },
 });
