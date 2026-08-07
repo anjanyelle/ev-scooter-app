@@ -45,9 +45,11 @@ export default function SignupScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
+
+   <KeyboardAvoidingView
   style={styles.flex}
   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  keyboardVerticalOffset={20}
 >
       <Screen header={<ScreenHeader title="Create account" subtitle="Set up your LEXICON companion" back />} bottomInset={spacing.xxl}>
         <View style={styles.logoWrap}><LexiconLogo centered /></View>

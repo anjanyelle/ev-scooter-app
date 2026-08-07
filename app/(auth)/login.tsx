@@ -80,9 +80,10 @@ export default function LoginScreen() {
     <KeyboardAvoidingView
   style={styles.flex}
   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  keyboardVerticalOffset={20}
 >
       <Screen
-        scroll={false}
+        scroll={true}
         contentStyle={styles.content}
         bottomInset={spacing.xxl}
       >

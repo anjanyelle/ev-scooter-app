@@ -25,6 +25,7 @@ export function Screen({ children, scroll = true, refreshing = false, onRefresh,
           contentContainerStyle={[styles.content, { paddingBottom: bottomInset }, contentStyle]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
           refreshControl={onRefresh ? <RefreshControl {...refreshProps} /> : undefined}
         >
           {children}

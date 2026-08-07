@@ -55,8 +55,8 @@ useEffect(() => {
 scooterY.value = 0;
   scooterRotate.value = withRepeat(
   withSequence(
-    withTiming(-0.8, { duration: 3500 }),
-    withTiming(0.8, { duration: 3500 }),
+   withTiming(-0.35, { duration: 4500 }),
+withTiming(0.35, { duration: 4500 }),
     withTiming(0, { duration: 2500 }),
   ),
   -1,
@@ -65,7 +65,7 @@ scooterY.value = 0;
 
 scooterScale.value = withRepeat(
   withSequence(
-   withTiming(1.005, { duration: 3500 }),
+   withTiming(1.002, { duration: 4500 }),
    withTiming(1, { duration: 3500 }),
   ),
   -1,
@@ -92,19 +92,23 @@ scooterScale.value = withRepeat(
   showcaseRotate.value = withRepeat(
   withSequence(
     withTiming(0, {
-      duration: 10000,
+      duration: 12000,
+      easing: Easing.linear,
     }),
 
-    withTiming(-4, {
-      duration: 600,
+    withTiming(-1.2, {
+      duration: 1800,
+      easing: Easing.inOut(Easing.ease),
     }),
 
-    withTiming(4, {
-      duration: 600,
+    withTiming(1.2, {
+      duration: 1800,
+      easing: Easing.inOut(Easing.ease),
     }),
 
     withTiming(0, {
-      duration: 600,
+      duration: 1800,
+      easing: Easing.inOut(Easing.ease),
     }),
   ),
   -1,
@@ -120,6 +124,7 @@ const scooterAnimatedStyle = useAnimatedStyle(() => ({
 },    { scale: scooterScale.value },
   ],
 }));
+
 
  const headlightAnimatedStyle = useAnimatedStyle(() => ({
   opacity: headlightOpacity.value,
@@ -169,7 +174,7 @@ const floorAnimatedStyle = useAnimatedStyle(() => ({
           <Animated.Image
             source={scooterSource}
             resizeMode="contain"
-            fadeDuration={0}
+            fadeDuration={250}
            style={[
     styles.scooterImage,
     compact ? styles.scooterImageCompact : null,
